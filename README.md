@@ -17,3 +17,4 @@ Later system can be improved to analyze code for how much is finished and is the
 
 ## To implement:
 battle pass system (every day reward, the bigger is your strike the better reward will be)
+ranking (comparison to random devs from some online resource)
