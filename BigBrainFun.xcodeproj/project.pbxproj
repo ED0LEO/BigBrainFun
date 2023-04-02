@@ -14,6 +14,7 @@
 		0CE0BBEF29D89BB000632086 /* BigBrainFunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBEE29D89BB000632086 /* BigBrainFunTests.swift */; };
 		0CE0BBF929D89BB000632086 /* BigBrainFunUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBF829D89BB000632086 /* BigBrainFunUITests.swift */; };
 		0CE0BBFB29D89BB000632086 /* BigBrainFunUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBFA29D89BB000632086 /* BigBrainFunUITestsLaunchTests.swift */; };
+		0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0D04329D9DC8E00ABA468 /* DashView.swift */; };
 		0CE8E0FB29D8F8D300983BC7 /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */; };
 		0CE8E0FD29D90CC200983BC7 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8E0FC29D90CC200983BC7 /* PlanView.swift */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,7 @@
 		0CE0BBF429D89BB000632086 /* BigBrainFunUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BigBrainFunUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE0BBF829D89BB000632086 /* BigBrainFunUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunUITests.swift; sourceTree = "<group>"; };
 		0CE0BBFA29D89BB000632086 /* BigBrainFunUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		0CE0D04329D9DC8E00ABA468 /* DashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashView.swift; sourceTree = "<group>"; };
 		0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
 		0CE8E0FC29D90CC200983BC7 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 			children = (
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
+				0CE0D04329D9DC8E00ABA468 /* DashView.swift */,
 				0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */,
 				0CE8E0FC29D90CC200983BC7 /* PlanView.swift */,
 				0CE0BBE029D89BB000632086 /* Assets.xcassets */,
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
 				0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */,
 				0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */,
 				0CE8E0FB29D8F8D300983BC7 /* RulesView.swift in Sources */,

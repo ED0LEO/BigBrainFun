@@ -8,25 +8,31 @@
 import SwiftUI
 
 struct PlanView: View {
-    @State private var text = "Next project to accomplish"
+    @State private var text = "Next quest to accomplish"
+    @State private var quests = [String]()
     @State private var isComplete = false
     
     var body: some View {
         VStack{
             Group{
                 //list of tasks
-                Text("Current tasks")
+                Text("Current quests")
                     .padding()
                 
+                List(quests, id: \.self) { text in
+                    Text(text)
+                }
+                
                 //to add new task
-                TextField("Enter text here", text: $text)
+                TextField("Enter quest here", text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
                 Button(action: {
-                    
+                    self.quests.append(self.text)
+                    self.text = ""
                 }) {
-                    Text("Play this project")
+                    Text("Play this quest")
                 }
                 .buttonStyle(GrowingButton())
                 Spacer()
