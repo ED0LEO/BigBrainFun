@@ -13,8 +13,10 @@ struct WinView: View{
             Text("You've won:")
                 .font(.title)
                 .padding()
-            Image(systemName: "dollar")
+            Image(systemName: "dollarsign")
+                .font(.largeTitle)
                 .foregroundColor(.green)
+                .frame(height: 50)
         }
     }
 }
@@ -26,6 +28,7 @@ struct PlayView: View{
     @State private var reel1 = "star"
     @State private var reel2 = "heart"
     @State private var reel3 = "questionmark"
+    @Binding var won: Bool
     
     var body: some View{
         VStack{
@@ -86,13 +89,9 @@ struct PlayView: View{
             reel3 = newReel3
         }
         
-        if reel1 == reel2 && reel2 == reel3 {
-            NavigationView {
-                NavigationLink(destination: WinView()) {
-                    Text("Dash")
-                        .padding()
-                }
-                .buttonStyle(GrowingButton())
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+            if reel1 == reel2 && reel2 == reel3 {
+                won = true
             }
         }
         
@@ -108,19 +107,25 @@ struct DashView: View{
     var body: some View{
         VStack{
             if !winningTime {
-                PlayView()
+                PlayView(won: $winningTime)
+                    .animation(
+                        Animation.spring(response: 0.5, dampingFraction: 0.5)
+                            .speed(1.5)
+                    )
             } else {
                 WinView()
+                    .animation(
+                        Animation.interpolatingSpring(stiffness: 100, damping: 10)
+                    )
+                
+                Button("Go back") {
+                    winningTime.toggle()
+                }
+                .buttonStyle(GrowingButton())
             }
-            
-            Button("Go back:") {
-                winningTime.toggle()
-            }
-            .padding()
-            .foregroundColor(.white)
-            .background(Color.blue)
-            .cornerRadius(10)
         }
+
+
     }
     
 }
