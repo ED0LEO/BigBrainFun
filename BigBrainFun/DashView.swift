@@ -7,24 +7,60 @@
 
 import SwiftUI
 
-struct WinView: View{
-    var body: some View{
-        VStack{
-            Text("You've won:")
+struct WinView: View {
+    @State private var scale: CGFloat = 0.5
+    @State private var rotation: Double = 0
+    @State private var opacity: Double = 0
+    @Binding var won: Bool
+    
+    var body: some View {
+        VStack {
+            Text("Congratulations, you've won!")
                 .font(.title)
-                .padding()
-            Image(systemName: "dollarsign")
-                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, 50)
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            Image(systemName: "dollarsign.circle.fill")
+                .font(.system(size: 150))
                 .foregroundColor(.green)
-                .frame(height: 50)
+                .rotationEffect(.degrees(rotation))
+                .scaleEffect(scale)
+                .opacity(opacity)
+                .animation(Animation.easeOut(duration: 1.0))
+                .onAppear {
+                    withAnimation(Animation.easeOut(duration: 0.5)) {
+                        scale = 1.0
+                        rotation = 360
+                        opacity = 1.0
+                    }
+                }
+            
+            Spacer()
+            
+            Button("Go back") {
+                won.toggle()
+            }
+            .buttonStyle(GrowingButton())
+            
+            
+            Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+        )
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
 
+
 struct PlayView: View{
     @State private var isRolling = false
-    @State private var fruits = ["star", "heart", "questionmark"]
+    @State private var videos = ["star", "heart", "questionmark"]
     @State private var reel1 = "star"
     @State private var reel2 = "heart"
     @State private var reel3 = "questionmark"
@@ -41,61 +77,85 @@ struct PlayView: View{
                 Image(systemName: "star.fill")
                     .foregroundColor(.yellow)
             }
+            .padding(.top, 50)
+            .padding(.horizontal, 30)
             
             Spacer()
-                .frame(height: 50)
             
             HStack(spacing: 40) {
                 Image(systemName: reel1)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.yellow)
+                    .foregroundColor(.white)
                 Image(systemName: reel2)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.pink)
+                    .foregroundColor(.white)
                 Image(systemName: reel3)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.green)
+                    .foregroundColor(.white)
             }
             .frame(height: 150)
+            
+            Spacer()
+            
+            Button("Roll", action: spinReels)
+                .buttonStyle(GrowingGradButton())
+                .padding(.vertical, 20)
+                .padding(.horizontal, 80)
+                .disabled(isRolling)
+                .opacity(isRolling ? 0.5 : 1)
+                .animation(.easeInOut(duration: 0.3))
+            
             Spacer()
                 .frame(height: 50)
-            Group{
-                Button("Roll", action: spinReels)
-                    .buttonStyle(GrowingGradButton())
-                    .padding()
-                    .disabled(isRolling)
-                    .opacity(isRolling ? 0.5 : 1)
-                    .animation(.easeInOut(duration: 0.3))
-                
-                Spacer()
-                    .frame(height: 50)
-            }
             
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .edgesIgnoringSafeArea(.all)
+        .background(
+            LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+        )
+        
     }
+    
     
     func spinReels() {
         isRolling = true
-        let newReel1 = fruits.randomElement()!
-        let newReel2 = fruits.randomElement()!
-        let newReel3 = fruits.randomElement()!
+        let newReel1 = videos.randomElement()!
+        let newReel2 = videos.randomElement()!
+        let newReel3 = videos.randomElement()!
         
-        withAnimation(.easeInOut(duration: 1)) {
-            reel1 = newReel1
-            reel2 = newReel2
-            reel3 = newReel3
-        }
+        let delay1 = Double.random(in: 0.5...1.5)
+        let delay2 = Double.random(in: 0.5...1.5)
+        let delay3 = Double.random(in: 0.5...1.5)
+        let duration1 = Double.random(in: 0.8...1.2)
+        let duration2 = Double.random(in: 0.8...1.2)
+        let duration3 = Double.random(in: 0.8...1.2)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
-            if reel1 == reel2 && reel2 == reel3 {
-                won = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay1) {
+            withAnimation(.easeInOut(duration: duration1)) {
+                reel1 = newReel1
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay2) {
+            withAnimation(.easeInOut(duration: duration2)) {
+                reel2 = newReel2
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay3) {
+            withAnimation(.easeInOut(duration: duration3)) {
+                reel3 = newReel3
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+            if reel1 == reel2 && reel2 == reel3 {
+                won = true
+            }
             isRolling = false
         }
     }
@@ -113,19 +173,12 @@ struct DashView: View{
                             .speed(1.5)
                     )
             } else {
-                WinView()
+                WinView(won: $winningTime)
                     .animation(
                         Animation.interpolatingSpring(stiffness: 100, damping: 10)
                     )
-                
-                Button("Go back") {
-                    winningTime.toggle()
-                }
-                .buttonStyle(GrowingButton())
             }
         }
-
-
     }
     
 }
@@ -135,3 +188,4 @@ struct DashView_Previews: PreviewProvider {
         DashView()
     }
 }
+
