@@ -85,6 +85,8 @@ struct PlanView: View {
     @State private var quests = [Quest]()
     @State private var isComplete = false
     
+    @State private var isPopoverPresented = false
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -173,7 +175,7 @@ struct PlanView: View {
                 .padding(.horizontal)
                 .padding(.bottom)
                 
-                Button("Check", action: addQuest)
+                Button("Check", action: checkIfQuestCompleted)
                     .buttonStyle(GrowingButton())
                     .padding()
                     .animation(.easeInOut(duration: 0.3))
@@ -188,8 +190,22 @@ struct PlanView: View {
                     ChestView()
                 }
             }
+            .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
+                        PopoverView(isPresented: $isPopoverPresented)
+                    }
             .padding(.top, 44)
         }
+    }
+    
+    private func checkIfQuestCompleted() {
+        for quest in quests {
+            if quest.isCompleted {
+                isComplete = true
+                return
+            }
+        }
+        isComplete = false
+        isPopoverPresented = true
     }
     
     private func markQuestCompleted(quest: Quest) {
@@ -210,6 +226,33 @@ struct PlanView: View {
     }
 }
 
+struct PopoverView: View {
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        VStack {
+            Text("You cant get a prize yet!")
+                .font(.headline)
+                .padding()
+            
+            Image(systemName: "cross")
+                .font(.system(size: 60))
+                .foregroundColor(.red)
+            
+            Button("Close", action: {
+                isPresented = false
+            })
+                .buttonStyle(GrowingButton())
+                .padding()
+                .animation(.easeInOut(duration: 0.3))
+            
+        }
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 5)
+        .padding()
+    }
+}
 struct Quest: Identifiable, Equatable {
     let id = UUID()
     var title: String
