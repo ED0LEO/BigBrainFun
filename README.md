@@ -2,7 +2,7 @@
 
 Idea for an app to become more productive by using well known psychological techniques. Because will power is not enough in modern world.
 
-![App logo: yellow 3d star on pink background.](BigBrainFun/Assets.xcassets/AppIcon.appiconset/256.png)
+![App logo: yellow 3d star on pink background.](BigBrainFun/Assets.xcassets/AppIcon.appiconset/Icon-256.png)
 
 Create an app with variable ratio reinforcement for study. Reward is video, it can be good or it can be bad. (Good=music clips, bad=boring).
 Correct answers: correctly made apps/scripts/parts of them. As soon as project finished - play roll in the study reinforcement app. App should be fun and used frequently enough. So it should be used as soon as parts of bigger project are finished, half an hour in the beginning, increasing time after some amount of projects finished. 
