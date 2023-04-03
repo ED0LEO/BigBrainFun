@@ -16,5 +16,7 @@ At first it is just a button which should be clicked when project is finished. I
 Later system can be improved to analyze code for how much is finished and is there more code added (auto code checks, more code - better).
 
 ## To implement:
-battle pass system (every day reward, the bigger is your strike the better reward will be)
-ranking (comparison to random devs from some online resource)
+- battle pass system (every day reward, the bigger is your strike the better reward will be)
+- ranking (comparison to random devs from some online resource)
+- leveling up
+- earning points to unlock/get more rewards
