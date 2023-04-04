@@ -137,11 +137,8 @@ struct PlanView: View {
         Category.allCases
     }
     
-    
     var body: some View {
         ZStack {
-            SpinningBackground()
-            
             VStack {
                 Text("Current quests")
                     .titleStyle()

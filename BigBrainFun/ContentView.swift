@@ -66,37 +66,38 @@ struct ContentView: View {
     @State private var selection = 0
 
     var body: some View {
-        ZStack {
-            SpinningBackground()
-            Spacer()
-            
-            TabView(selection: $selection) {
-                DashView()
-                    .tag(0)
-                    .tabItem {
-                        Label("Dash", systemImage: "circle.fill")
-                    }
+        GeometryReader { geometry in
+            ZStack {
+                SpinningBackground()
                 
-                PlanView()
-                    .tag(1)
-                    .tabItem {
-                        Label("Quests", systemImage: "square.fill")
-                    }
-                
-                RulesView()
-                    .tag(2)
-                    .tabItem {
-                        Label("Guide", systemImage: "triangle.fill")
-                    }
+                TabView(selection: $selection) {
+                    DashView()
+                        .tag(0)
+                        .tabItem {
+                            Label("Dash", systemImage: "circle.fill")
+                        }
+                    
+                    PlanView()
+                        .tag(1)
+                        .tabItem {
+                            Label("Quests", systemImage: "square.fill")
+                        }
+                    
+                    RulesView()
+                        .tag(2)
+                        .tabItem {
+                            Label("Guide", systemImage: "triangle.fill")
+                        }
+                }
+                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.9)
             }
-            .frame(maxHeight: 300)
-            Spacer()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.white)
+            .ignoresSafeArea()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
-        .ignoresSafeArea()
     }
 }
+
 
 
 
