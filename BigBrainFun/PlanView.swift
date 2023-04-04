@@ -79,40 +79,102 @@ struct ChestView_Previews: PreviewProvider {
     }
 }
 
+struct TitleStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(Font.system(size: 36, weight: .bold))
+            .foregroundColor(.white)
+            .shadow(color: Color(red: 255/255, green: 102/255, blue: 102/255), radius: 4, x: 0, y: 0)
+    }
+}
+
+extension Text {
+    func titleStyle() -> some View {
+        self.modifier(TitleStyle())
+    }
+}
+
+struct SpinningBackground: View {
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            .ignoresSafeArea()
+            .overlay(
+                ZStack {
+                    ForEach(0..<10) { _ in
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(.pink)
+                            .font(.system(size: 30))
+                            .offset(x: CGFloat.random(in: -200...200), y: CGFloat.random(in: -200...200))
+                            .rotation3DEffect(.degrees(Double.random(in: 0...360)), axis: (x: 1, y: 1, z: 0))
+                            .animation(Animation.linear(duration: Double.random(in: 1...3)).repeatForever(autoreverses: false))
+                        
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                            .font(.system(size: 30))
+                            .offset(x: CGFloat.random(in: -200...200), y: CGFloat.random(in: -200...200))
+                            .rotation3DEffect(.degrees(Double.random(in: 0...360)), axis: (x: 0, y: 1, z: 1))
+                            .animation(Animation.linear(duration: Double.random(in: 1...3)).repeatForever(autoreverses: false))
+                    }
+                }
+            )
+    }
+}
+
 
 struct PlanView: View {
     @State private var newQuest = ""
     @State private var quests = [Quest]()
     @State private var isComplete = false
-    
     @State private var isPopoverPresented = false
+    @State private var selectedCategory: Category = .study
+    @State private var addCategory: Category = .study
+    
+    var sortedQuests: [Quest] {
+        quests.sorted { $0.category.rawValue < $1.category.rawValue }
+    }
+    
+    var categories: [Category] {
+        Category.allCases
+    }
+    
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-            
-                .ignoresSafeArea()
-            
+            SpinningBackground()
             
             VStack {
-                HStack(spacing: 10) {
-                    Image(systemName: "person.crop.circle.fill")
-                        .font(.system(size: 32))
-                        .foregroundColor(.white)
-                        .padding(.trailing, 6)
-                    Text("Current quests")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color(red: 255/255, green: 102/255, blue: 102/255))
-                .cornerRadius(20)
+                Text("Current quests")
+                    .titleStyle()
+                    .padding(.bottom)
                 
+                Picker(selection: $selectedCategory, label: Text("Category")) {
+                    ForEach(categories, id: \.self) { category in
+                        Text(category.rawValue)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                ZStack {
+                                    if selectedCategory == category {
+                                        LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing)
+                                    } else {
+                                        Color.gray.opacity(0.4)
+                                    }
+                                }
+                            )
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(selectedCategory == category ? Color.blue : Color.clear, lineWidth: 2)
+                            )
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
                 
                 ScrollView {
-                    ForEach(quests) { quest in
+                    
+                    ForEach(sortedQuests.filter { $0.category == selectedCategory }) { quest in
                         HStack {
                             Button(action: {
                                 markQuestCompleted(quest: quest)
@@ -127,6 +189,17 @@ struct PlanView: View {
                             Text(quest.title)
                                 .font(.title3)
                                 .foregroundColor(.white)
+                                .padding()
+                                .bold()
+                            
+                            Text(quest.category.rawValue)
+                                .font(.headline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color.pink)
+                                .cornerRadius(8)
                             
                             Spacer()
                             
@@ -156,17 +229,25 @@ struct PlanView: View {
                 .padding()
                 
                 HStack {
-                    TextField("Enter new quest", text: $newQuest, onCommit: addQuest)
+                    TextField("Enter new quest", text: $newQuest, onCommit: {addQuest(title: newQuest, category: addCategory) })
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
-                    Button(action: addQuest) {
+                    Button(action: {addQuest(title: newQuest, category: addCategory) }) {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 24))
                             .foregroundColor(.white)
                             .padding(.horizontal)
                     }
                     .buttonStyle(BorderlessButtonStyle())
+                    .padding(.horizontal)
+                    
+                    Picker("", selection: $addCategory) {
+                        ForEach(Category.allCases, id: \.self) {
+                            Text($0.rawValue)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                     .padding(.horizontal)
                 }
                 .padding()
@@ -187,12 +268,12 @@ struct PlanView: View {
                         .frame(width: 100, height: 100)
                         .foregroundColor(.white)
                 } else {
-                    ChestView()
+                    
                 }
             }
             .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
-                        PopoverView(isPresented: $isPopoverPresented)
-                    }
+                PopoverView(isPresented: $isPopoverPresented)
+            }
             .padding(.top, 44)
         }
     }
@@ -218,11 +299,11 @@ struct PlanView: View {
         quests.remove(at: index)
     }
     
-    private func addQuest() {
-        if !newQuest.isEmpty {
-            quests.append(Quest(title: newQuest))
-            newQuest = ""
+    private func addQuest(title: String, category: Category) {
+        if !title.isEmpty {
+            quests.append(Quest(title: title, category: category))
         }
+        newQuest = ""
     }
 }
 
@@ -242,9 +323,9 @@ struct PopoverView: View {
             Button("Close", action: {
                 isPresented = false
             })
-                .buttonStyle(GrowingButton())
-                .padding()
-                .animation(.easeInOut(duration: 0.3))
+            .buttonStyle(GrowingButton())
+            .padding()
+            .animation(.easeInOut(duration: 0.3))
             
         }
         .background(Color.white)
@@ -253,11 +334,18 @@ struct PopoverView: View {
         .padding()
     }
 }
+
+enum Category: String, CaseIterable {
+    case study = "Study"
+    case dev = "Dev"
+}
+
 struct Quest: Identifiable, Equatable {
     let id = UUID()
     var title: String
     var isCompleted = false
     var deleteButtonIsShown = false
+    var category: Category = Category.study
 }
 
 struct PlanView_Previews: PreviewProvider {

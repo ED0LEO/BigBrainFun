@@ -71,12 +71,16 @@ struct PlayView: View{
             HStack {
                 Image(systemName: "star.fill")
                     .foregroundColor(.yellow)
-                Text("Enhancer")
-                    .font(.largeTitle)
+                    .font(.system(size: 24))
+                Text("Dash")
+                    .titleStyle()
                     .fontWeight(.bold)
                 Image(systemName: "star.fill")
                     .foregroundColor(.yellow)
+                    .font(.system(size: 24))
+
             }
+            .padding(.bottom)
             .padding(.top, 50)
             .padding(.horizontal, 30)
             

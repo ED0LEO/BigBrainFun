@@ -61,39 +61,43 @@ struct GrowingGradButton: ButtonStyle {
     }
 }
 
+
 struct ContentView: View {
+    @State private var selection = 0
+
     var body: some View {
-        NavigationView {
-            VStack{
-                Spacer()
-                List {
-                    NavigationLink(destination: DashView()) {
-                        Text("Dash")
-                            .padding()
+        ZStack {
+            SpinningBackground()
+            Spacer()
+            
+            TabView(selection: $selection) {
+                DashView()
+                    .tag(0)
+                    .tabItem {
+                        Label("Dash", systemImage: "circle.fill")
                     }
-                    .buttonStyle(GrowingButton())
-                    NavigationLink(destination: PlanView()) {
-                        Text("Quests")
-                            .padding()
+                
+                PlanView()
+                    .tag(1)
+                    .tabItem {
+                        Label("Quests", systemImage: "square.fill")
                     }
-                    .buttonStyle(GrowingButton())
-                    NavigationLink(destination: RulesView()) {
-                        Text("Guide")
-                            .padding()
+                
+                RulesView()
+                    .tag(2)
+                    .tabItem {
+                        Label("Guide", systemImage: "triangle.fill")
                     }
-                    .buttonStyle(GrowingButton())
-                }
-                .padding(.vertical)
-                .listStyle(SidebarListStyle())
-                .frame(height: 300)
-                Spacer()
             }
-            .navigationTitle("BBF MENU")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxHeight: 300)
+            Spacer()
         }
-        
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white)
+        .ignoresSafeArea()
     }
 }
+
 
 
 struct ContentView_Previews: PreviewProvider {
