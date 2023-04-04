@@ -55,6 +55,7 @@ struct RulesView: View {
                 }
             }
             .padding()
+            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
         }
     }
 }

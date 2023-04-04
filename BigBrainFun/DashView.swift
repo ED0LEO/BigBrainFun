@@ -118,6 +118,7 @@ struct PlayView: View{
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
+        
     }
     
     

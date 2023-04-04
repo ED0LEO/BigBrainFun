@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
 		0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDE29D89BAF00632086 /* ContentView.swift */; };
 		0CE0BBE129D89BB000632086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CE0BBE029D89BB000632086 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningBackgroundView.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CE0BBD929D89BAF00632086 /* BigBrainFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BigBrainFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunApp.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
 				0CE0D04329D9DC8E00ABA468 /* DashView.swift */,
+				0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */,
 				0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */,
 				0CE8E0FC29D90CC200983BC7 /* PlanView.swift */,
 				0CE0BBE029D89BB000632086 /* Assets.xcassets */,
@@ -270,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,
 				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
 				0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */,
 				0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */,

@@ -8,77 +8,6 @@
 import SwiftUI
 import SceneKit
 
-struct ChestView: View {
-    @State private var rotation: CGFloat = 0
-    
-    var body: some View {
-        SceneView(scene: createScene(), options: [.allowsCameraControl])
-            .frame(width: 200, height: 200)
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { value in
-                        rotation += value.translation.width / 50
-                    }
-                    .onEnded { value in
-                        withAnimation(.spring()) {
-                            rotation = 0
-                        }
-                    }
-            )
-    }
-    private func createScene() -> SCNScene {
-        let scene = SCNScene()
-        
-        // Create chest geometry and material
-        let chestGeometry = SCNBox(width: 1.0, height: 0.8, length: 0.6, chamferRadius: 0.1)
-        let chestMaterial = SCNMaterial()
-        chestMaterial.diffuse.contents = NSImage(named: "heart_texture")
-        chestGeometry.materials = [chestMaterial]
-        
-        // Create chest node
-        let chestNode = SCNNode(geometry: chestGeometry)
-        chestNode.position = SCNVector3(0, 0, -2)
-        scene.rootNode.addChildNode(chestNode)
-        
-        // Create lid node
-        let lidGeometry = SCNBox(width: 1.0, height: 0.05, length: 0.6, chamferRadius: 0.1)
-        let lidMaterial = SCNMaterial()
-        lidMaterial.diffuse.contents = Color(red: 0.957, green: 0.835, blue: 0.573)
-        lidGeometry.materials = [lidMaterial]
-        
-        let lidNode = SCNNode(geometry: lidGeometry)
-        lidNode.position = SCNVector3(0, 0.4, -0.3)
-        chestNode.addChildNode(lidNode)
-        
-        // Create lock node
-        let lockGeometry = SCNBox(width: 0.2, height: 0.2, length: 0.1, chamferRadius: 0.03)
-        let lockMaterial = SCNMaterial()
-        lockMaterial.diffuse.contents = Color(red: 0.082, green: 0.082, blue: 0.082)
-        lockGeometry.materials = [lockMaterial]
-        
-        let lockNode = SCNNode(geometry: lockGeometry)
-        lockNode.position = SCNVector3(0, 0.25, 0.31)
-        lidNode.addChildNode(lockNode)
-        
-        // Add animations
-        let lidOpenAnimation = SCNAction.rotateBy(x: -CGFloat.pi / 4, y: 0, z: 0, duration: 0.5)
-        lidOpenAnimation.timingMode = .easeInEaseOut
-        
-        let lidCloseAnimation = SCNAction.rotateBy(x: CGFloat.pi / 4, y: 0, z: 0, duration: 0.5)
-        lidCloseAnimation.timingMode = .easeInEaseOut
-        
-        lidNode.runAction(lidCloseAnimation)
-        
-        return scene
-    }
-}
-
-struct ChestView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChestView()
-    }
-}
-
 struct TitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -94,33 +23,6 @@ extension Text {
     }
 }
 
-struct SpinningBackground: View {
-    var body: some View {
-        LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-            .ignoresSafeArea()
-            .overlay(
-                ZStack {
-                    ForEach(0..<10) { _ in
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.pink)
-                            .font(.system(size: 30))
-                            .offset(x: CGFloat.random(in: -200...200), y: CGFloat.random(in: -200...200))
-                            .rotation3DEffect(.degrees(Double.random(in: 0...360)), axis: (x: 1, y: 1, z: 0))
-                            .animation(Animation.linear(duration: Double.random(in: 1...3)).repeatForever(autoreverses: false))
-                        
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.system(size: 30))
-                            .offset(x: CGFloat.random(in: -200...200), y: CGFloat.random(in: -200...200))
-                            .rotation3DEffect(.degrees(Double.random(in: 0...360)), axis: (x: 0, y: 1, z: 1))
-                            .animation(Animation.linear(duration: Double.random(in: 1...3)).repeatForever(autoreverses: false))
-                    }
-                }
-            )
-    }
-}
-
-
 struct PlanView: View {
     @State private var newQuest = ""
     @State private var quests = [Quest]()
@@ -128,6 +30,7 @@ struct PlanView: View {
     @State private var isPopoverPresented = false
     @State private var selectedCategory: Category = .study
     @State private var addCategory: Category = .study
+    @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
         quests.sorted { $0.category.rawValue < $1.category.rawValue }
@@ -170,7 +73,6 @@ struct PlanView: View {
                 .padding(.horizontal)
                 
                 ScrollView {
-                    
                     ForEach(sortedQuests.filter { $0.category == selectedCategory }) { quest in
                         HStack {
                             Button(action: {
@@ -226,7 +128,8 @@ struct PlanView: View {
                 .padding()
                 
                 HStack {
-                    TextField("Enter new quest", text: $newQuest, onCommit: {addQuest(title: newQuest, category: addCategory) })
+                    TextField("New quest", text: $newQuest, onCommit: {addQuest(title: newQuest, category: addCategory) })
+                        .focused($focused)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
@@ -238,6 +141,7 @@ struct PlanView: View {
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     .padding(.horizontal)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
                     
                     Picker("", selection: $addCategory) {
                         ForEach(Category.allCases, id: \.self) {
@@ -252,6 +156,9 @@ struct PlanView: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 .padding(.bottom)
+                .onAppear {
+                            self.focused = true
+                        }
                 
                 Button("Check", action: checkIfQuestCompleted)
                     .buttonStyle(GrowingButton())
@@ -264,8 +171,6 @@ struct PlanView: View {
                         .resizable()
                         .frame(width: 100, height: 100)
                         .foregroundColor(.white)
-                } else {
-                    
                 }
             }
             .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
@@ -273,6 +178,7 @@ struct PlanView: View {
             }
             .padding(.top, 44)
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
     
     private func checkIfQuestCompleted() {
@@ -325,7 +231,6 @@ struct PopoverView: View {
             .animation(.easeInOut(duration: 0.3))
             
         }
-        .background(Color.white)
         .cornerRadius(10)
         .shadow(radius: 5)
         .padding()
