@@ -26,7 +26,6 @@ struct GrowingButton: ButtonStyle {
     }
 }
 
-
 struct GrowingGradButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -61,10 +60,9 @@ struct GrowingGradButton: ButtonStyle {
     }
 }
 
-
 struct ContentView: View {
     @State private var selection = 0
-
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -92,7 +90,6 @@ struct ContentView: View {
                 .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.9)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
             .ignoresSafeArea()
         }
     }

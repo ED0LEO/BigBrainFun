@@ -157,8 +157,8 @@ struct PlanView: View {
                 .padding(.horizontal)
                 .padding(.bottom)
                 .onAppear {
-                            self.focused = true
-                        }
+                    self.focused = true
+                }
                 
                 Button("Check", action: checkIfQuestCompleted)
                     .buttonStyle(GrowingButton())

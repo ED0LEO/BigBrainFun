@@ -78,7 +78,7 @@ struct PlayView: View{
                 Image(systemName: "star.fill")
                     .foregroundColor(.yellow)
                     .font(.system(size: 24))
-
+                
             }
             .padding(.bottom)
             .padding(.top, 50)
