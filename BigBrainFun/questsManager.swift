@@ -64,6 +64,30 @@ class QuestsManager: ObservableObject {
         sqlite3_finalize(createTableStatement)
     }
     
+    func printAllQuests() {
+        let queryStatementString = "SELECT * FROM Quest;"
+        var queryStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = String(cString: sqlite3_column_text(queryStatement, 0))
+                let title = String(cString: sqlite3_column_text(queryStatement, 1))
+                let isCompletedValue = sqlite3_column_int(queryStatement, 2)
+                let deleteButtonIsShownValue = sqlite3_column_int(queryStatement, 3)
+                let category = Category(rawValue: String(cString: sqlite3_column_text(queryStatement, 4))) ?? .study
+                
+                let isCompleted = isCompletedValue != 0
+                let deleteButtonIsShown = deleteButtonIsShownValue != 0
+                
+                print("id: \(id), title: \(title), isCompleted: \(isCompleted), deleteButtonIsShown: \(deleteButtonIsShown), category: \(category.rawValue)")
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+    }
+
+    
     // Insert a new Quest into the database
     func insertQuest(quest: Quest) {
         let insertStatementString = "INSERT INTO Quest (id, title, isCompleted, deleteButtonIsShown, category) VALUES (?, ?, ?, ?, ?);"
@@ -75,10 +99,14 @@ class QuestsManager: ObservableObject {
             sqlite3_bind_int(insertStatement, 4, quest.deleteButtonIsShown ? 1 : 0)
             sqlite3_bind_text(insertStatement, 5, quest.category.rawValue, -1, nil)
             
+            print("id is " + quest.id.uuidString)
+            print("title is " + quest.title)
+
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
             } else {
-                print("Could not insert row.")
+                let errmsg = String(cString: sqlite3_errmsg(database))
+                print("Could not insert row. Error message: \(errmsg)")
             }
         } else {
             print("INSERT statement could not be prepared.")
@@ -101,5 +129,41 @@ class QuestsManager: ObservableObject {
         }
         sqlite3_finalize(deleteStatement)
     }
-
+    
+    func getAllQuests() -> [Quest] {
+        let queryStatementString = "SELECT * FROM Quest;"
+        var queryStatement: OpaquePointer?
+        var quests: [Quest] = []
+        
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let id = sqlite3_column_text(queryStatement, 0),
+                      let title = sqlite3_column_text(queryStatement, 1),
+                      let isCompletedValue = sqlite3_column_text(queryStatement, 2),
+                      let deleteButtonIsShownValue = sqlite3_column_text(queryStatement, 3),
+                      let category = sqlite3_column_text(queryStatement, 4)
+                else {
+                    continue
+                }
+                
+                let isCompleted = isCompletedValue != nil
+                let deleteButtonIsShown = deleteButtonIsShownValue != nil
+                let quest = Quest(title: String(cString: title),
+                                  isCompleted: isCompleted,
+                                  deleteButtonIsShown: deleteButtonIsShown,
+                                  category: Category(rawValue: String(cString: category)) ?? .study)
+                quests.append(quest)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        
+        return quests
+    }
+    
+    deinit {
+        closeDatabase()
+        print("Database is closed")
+    }
 }

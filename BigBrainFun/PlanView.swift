@@ -24,6 +24,7 @@ extension Text {
 }
 
 struct PlanView: View {
+    @EnvironmentObject var questsManager: QuestsManager
     @State private var newQuest = ""
     @State private var quests = [Quest]()
     @State private var isComplete = false
@@ -33,8 +34,10 @@ struct PlanView: View {
     @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
-        quests.sorted { $0.category.rawValue < $1.category.rawValue }
-    }
+//        quests.sorted { $0.category.rawValue < $1.category.rawValue }
+        let quests = questsManager.getAllQuests()
+            return quests.sorted { $0.category.rawValue < $1.category.rawValue }
+        }
     
     var categories: [Category] {
         Category.allCases
@@ -204,9 +207,12 @@ struct PlanView: View {
     
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
-            quests.append(Quest(title: title, category: category))
+//            quests.append(Quest(title: title, category: category))
+            questsManager.insertQuest(quest: Quest(title: title, category: category))
         }
         newQuest = ""
+        
+        questsManager.printAllQuests()
     }
 }
 
@@ -247,7 +253,7 @@ struct Quest: Identifiable, Equatable {
     var title: String
     var isCompleted = false
     var deleteButtonIsShown = false
-    var category: Category = Category.study
+    var category: Category
 }
 
 struct PlanView_Previews: PreviewProvider {
