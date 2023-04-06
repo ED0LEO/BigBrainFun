@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C1573ED29DEF64C008369C6 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1573EC29DEF63F008369C6 /* libsqlite3.tbd */; };
+		0C1573EF29DEFA6B008369C6 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */; };
 		0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */; };
 		0C4BABA029DE086B001DAE6C /* questsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* questsManager.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C1573EC29DEF63F008369C6 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningBackgroundView.swift; sourceTree = "<group>"; };
 		0C4BAB9F29DE086B001DAE6C /* questsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = questsManager.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C1573EF29DEFA6B008369C6 /* libsqlite3.0.tbd in Frameworks */,
+				0C1573ED29DEF64C008369C6 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,14 +89,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C1573EB29DEF63F008369C6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */,
+				0C1573EC29DEF63F008369C6 /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0CE0BBD029D89BAF00632086 = {
 			isa = PBXGroup;
 			children = (
-				0C4BAB9F29DE086B001DAE6C /* questsManager.swift */,
 				0CE0BBDB29D89BAF00632086 /* BigBrainFun */,
 				0CE0BBED29D89BB000632086 /* BigBrainFunTests */,
 				0CE0BBF729D89BB000632086 /* BigBrainFunUITests */,
 				0CE0BBDA29D89BAF00632086 /* Products */,
+				0C1573EB29DEF63F008369C6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +122,7 @@
 		0CE0BBDB29D89BAF00632086 /* BigBrainFun */ = {
 			isa = PBXGroup;
 			children = (
+				0C4BAB9F29DE086B001DAE6C /* questsManager.swift */,
 				0C95C42F29DA3CA00070832C /* Info.plist */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,

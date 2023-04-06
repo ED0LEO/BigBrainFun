@@ -13,7 +13,6 @@ struct SpinningBackgroundView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            
             LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.85, blue: 0.4), Color(red: 0.96, green: 0.48, blue: 0.8)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
                 .overlay(
