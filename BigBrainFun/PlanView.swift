@@ -168,6 +168,13 @@ struct PlanView: View {
                     .padding()
                     .animation(.easeInOut(duration: 0.3))
                 
+                Button("DELETEALL", action: {
+                    questsManager.emptyDatabase()
+                })
+                    .buttonStyle(GrowingButton())
+                    .padding()
+                    .animation(.easeInOut(duration: 0.3))
+                
                 
                 if isComplete {
                     Image(systemName: "checkmark.circle.fill")
@@ -207,8 +214,10 @@ struct PlanView: View {
     
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
-//            quests.append(Quest(title: title, category: category))
-            questsManager.insertQuest(quest: Quest(title: title, category: category))
+            let q = Quest(title: title, category: category)
+            quests.append(q)
+            questsManager.insertQuest(quest: q)
+            print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
         }
         newQuest = ""
         
@@ -249,7 +258,7 @@ enum Category: String, CaseIterable {
 }
 
 struct Quest: Identifiable, Equatable {
-    let id = UUID()
+    let id = UUID().uuidString
     var title: String
     var isCompleted = false
     var deleteButtonIsShown = false

@@ -10,7 +10,7 @@
 		0C1573ED29DEF64C008369C6 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1573EC29DEF63F008369C6 /* libsqlite3.tbd */; };
 		0C1573EF29DEFA6B008369C6 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */; };
 		0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */; };
-		0C4BABA029DE086B001DAE6C /* questsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* questsManager.swift */; };
+		0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
 		0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDE29D89BAF00632086 /* ContentView.swift */; };
 		0CE0BBE129D89BB000632086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CE0BBE029D89BB000632086 /* Assets.xcassets */; };
@@ -44,7 +44,7 @@
 		0C1573EC29DEF63F008369C6 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningBackgroundView.swift; sourceTree = "<group>"; };
-		0C4BAB9F29DE086B001DAE6C /* questsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = questsManager.swift; sourceTree = "<group>"; };
+		0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsManager.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CE0BBD929D89BAF00632086 /* BigBrainFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BigBrainFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunApp.swift; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 		0CE0BBDB29D89BAF00632086 /* BigBrainFun */ = {
 			isa = PBXGroup;
 			children = (
-				0C4BAB9F29DE086B001DAE6C /* questsManager.swift */,
+				0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */,
 				0C95C42F29DA3CA00070832C /* Info.plist */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
@@ -295,7 +295,7 @@
 				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,
 				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
 				0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */,
-				0C4BABA029DE086B001DAE6C /* questsManager.swift in Sources */,
+				0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */,
 				0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */,
 				0CE8E0FB29D8F8D300983BC7 /* RulesView.swift in Sources */,
 				0CE8E0FD29D90CC200983BC7 /* PlanView.swift in Sources */,

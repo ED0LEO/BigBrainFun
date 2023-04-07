@@ -64,6 +64,24 @@ class QuestsManager: ObservableObject {
         sqlite3_finalize(createTableStatement)
     }
     
+    func emptyDatabase() {
+        let deleteStatementString = "DELETE FROM Quest;"
+        var deleteStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            if sqlite3_step(deleteStatement) == SQLITE_DONE {
+                print("All records deleted from Quest table.")
+            } else {
+                let errmsg = String(cString: sqlite3_errmsg(database))
+                print("Could not delete records from Quest table. Error message: \(errmsg)")
+            }
+        } else {
+            print("DELETE statement could not be prepared.")
+        }
+        
+        sqlite3_finalize(deleteStatement)
+    }
+
     func printAllQuests() {
         let queryStatementString = "SELECT * FROM Quest;"
         var queryStatement: OpaquePointer?
@@ -86,22 +104,13 @@ class QuestsManager: ObservableObject {
         }
         sqlite3_finalize(queryStatement)
     }
-
     
     // Insert a new Quest into the database
     func insertQuest(quest: Quest) {
-        let insertStatementString = "INSERT INTO Quest (id, title, isCompleted, deleteButtonIsShown, category) VALUES (?, ?, ?, ?, ?);"
+        let insertStatementString = "INSERT INTO Quest (id, title, isCompleted, deleteButtonIsShown, category) VALUES ('\(quest.id)', '\(quest.title)', \(quest.isCompleted ? 1 : 0), \(quest.deleteButtonIsShown ? 1 : 0), '\(quest.category.rawValue)');"
+        
         var insertStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
-            sqlite3_bind_text(insertStatement, 1, quest.id.uuidString, -1, nil)
-            sqlite3_bind_text(insertStatement, 2, quest.title, -1, nil)
-            sqlite3_bind_int(insertStatement, 3, quest.isCompleted ? 1 : 0)
-            sqlite3_bind_int(insertStatement, 4, quest.deleteButtonIsShown ? 1 : 0)
-            sqlite3_bind_text(insertStatement, 5, quest.category.rawValue, -1, nil)
-            
-            print("id is " + quest.id.uuidString)
-            print("title is " + quest.title)
-
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
             } else {
@@ -111,6 +120,7 @@ class QuestsManager: ObservableObject {
         } else {
             print("INSERT statement could not be prepared.")
         }
+        
         sqlite3_finalize(insertStatement)
     }
     
@@ -118,7 +128,7 @@ class QuestsManager: ObservableObject {
         let deleteStatementString = "DELETE FROM Quest WHERE id = ?;"
         var deleteStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
-            sqlite3_bind_text(deleteStatement, 1, quest.id.uuidString, -1, nil)
+            sqlite3_bind_text(deleteStatement, 1, quest.id, -1, nil)
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
                 print("Successfully deleted row.")
             } else {
