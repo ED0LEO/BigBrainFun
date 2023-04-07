@@ -10,7 +10,7 @@ import SwiftUI
 struct CalendarView: View {
     @State private var selectedDate = Date()
     @State private var currentMonth = Date()
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -22,13 +22,13 @@ struct CalendarView: View {
                     currentMonth = Calendar.current.date(byAdding: .month, value: 1, to: currentMonth)!
                 }
             }
-            .padding()
-
+            .padding(5)
+            
             MonthView(selectedDate: $selectedDate, currentMonth: $currentMonth)
                 .padding()
         }
     }
-
+    
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM yyyy"
@@ -39,7 +39,7 @@ struct CalendarView: View {
 struct MonthView: View {
     @Binding var selectedDate: Date
     @Binding var currentMonth: Date
-
+    
     var body: some View {
         VStack {
             WeekdayHeaderView()
@@ -52,13 +52,13 @@ struct MonthView: View {
             }
         }
     }
-
+    
     private var monthData: [[Date]] {
         let month = currentMonth
         let startOfMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: month))!
         let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: startOfMonth))!
         let endOfMonth = Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
-
+        
         let totalWeeks = Calendar.current.dateComponents([.weekOfMonth], from: startOfMonth, to: endOfMonth).weekOfMonth ?? 0
         return (0..<totalWeeks).map { week in
             (0..<7).map { day -> Date in
@@ -73,7 +73,7 @@ struct DayView: View {
     let day: Date
     @Binding var selectedDate: Date
     @Binding var currentMonth: Date
-
+    
     var body: some View {
         Button(action: {
             selectedDate = day
@@ -86,11 +86,11 @@ struct DayView: View {
         .frame(maxWidth: .infinity)
         .background(isSelected ? Color.accentColor : Color.clear)
     }
-
+    
     private var isInCurrentMonth: Bool {
         Calendar.current.isDate(day, equalTo: currentMonth, toGranularity: .month)
     }
-
+    
     private var isSelected: Bool {
         Calendar.current.isDate(day, equalTo: selectedDate, toGranularity: .day)
     }
@@ -98,7 +98,7 @@ struct DayView: View {
 
 struct WeekdayHeaderView: View {
     let weekdaySymbols = Calendar.current.shortWeekdaySymbols
-
+    
     var body: some View {
         HStack(spacing: 0) {
             ForEach(weekdaySymbols, id: \.self) { weekday in

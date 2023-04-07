@@ -1,5 +1,5 @@
 //
-//  questsManager.swift
+//  QuestsManager.swift
 //  BigBrainFun
 //
 //  Created by Ed on 05/04/2023.
@@ -81,7 +81,7 @@ class QuestsManager: ObservableObject {
         
         sqlite3_finalize(deleteStatement)
     }
-
+    
     func printAllQuests() {
         let queryStatementString = "SELECT * FROM Quest;"
         var queryStatement: OpaquePointer?

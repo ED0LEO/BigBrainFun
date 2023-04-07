@@ -34,10 +34,10 @@ struct PlanView: View {
     @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
-//        quests.sorted { $0.category.rawValue < $1.category.rawValue }
+        //        quests.sorted { $0.category.rawValue < $1.category.rawValue }
         let quests = questsManager.getAllQuests()
-            return quests.sorted { $0.category.rawValue < $1.category.rawValue }
-        }
+        return quests.sorted { $0.category.rawValue < $1.category.rawValue }
+    }
     
     var categories: [Category] {
         Category.allCases
@@ -118,7 +118,6 @@ struct PlanView: View {
                                 .animation(.default)
                             }
                         }
-                        .padding()
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(10)
                         .padding(.horizontal)
@@ -128,7 +127,6 @@ struct PlanView: View {
                         }
                     }
                 }
-                .padding()
                 
                 HStack {
                     TextField("New quest", text: $newQuest, onCommit: {addQuest(title: newQuest, category: addCategory) })
@@ -158,23 +156,23 @@ struct PlanView: View {
                 .background(Color.white.opacity(0.2))
                 .cornerRadius(10)
                 .padding(.horizontal)
-                .padding(.bottom)
                 .onAppear {
                     self.focused = true
                 }
                 
-                Button("Check", action: checkIfQuestCompleted)
+                HStack{
+                    Button("Check", action: checkIfQuestCompleted)
+                        .buttonStyle(GrowingButton())
+                        .padding()
+                        .animation(.easeInOut(duration: 0.3))
+                    
+                    Button("DELETEALL", action: {
+                        questsManager.emptyDatabase()
+                    })
                     .buttonStyle(GrowingButton())
                     .padding()
                     .animation(.easeInOut(duration: 0.3))
-                
-                Button("DELETEALL", action: {
-                    questsManager.emptyDatabase()
-                })
-                    .buttonStyle(GrowingButton())
-                    .padding()
-                    .animation(.easeInOut(duration: 0.3))
-                
+                }
                 
                 if isComplete {
                     Image(systemName: "checkmark.circle.fill")
@@ -186,7 +184,6 @@ struct PlanView: View {
             .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
                 PopoverView(isPresented: $isPopoverPresented)
             }
-            .padding(.top, 44)
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }

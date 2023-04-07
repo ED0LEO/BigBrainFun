@@ -20,11 +20,12 @@ struct GrowingButton: ButtonStyle {
                 }
             )
             .foregroundColor(.white)
-            .font(.system(size: 32, weight: .semibold))
+            .font(.system(size: 20, weight: .semibold))
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
             .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
 }
+
 
 struct GrowingGradButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -87,7 +88,7 @@ struct ContentView: View {
                             Label("Guide", systemImage: "triangle.fill")
                         }
                 }
-                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.9)
+                .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()

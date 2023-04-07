@@ -81,7 +81,6 @@ struct PlayView: View{
                 
             }
             .padding(.bottom)
-            .padding(.top, 50)
             .padding(.horizontal, 30)
             
             Spacer()
@@ -111,14 +110,9 @@ struct PlayView: View{
                 .disabled(isRolling)
                 .opacity(isRolling ? 0.5 : 1)
                 .animation(.easeInOut(duration: 0.3))
-            
-            Spacer()
-                .frame(height: 50)
-            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
-        
     }
     
     
