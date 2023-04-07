@@ -15,6 +15,7 @@ struct BigBrainFunApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(questsManager)
+            CalendarView()
         }
     }
 }
