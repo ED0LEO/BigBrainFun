@@ -87,12 +87,20 @@ struct ContentView: View {
                         .tabItem {
                             Label("Guide", systemImage: "triangle.fill")
                         }
-                    YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
-                        .frame(width: 300, height: 200)
-                        .tag(3)
-                        .tabItem {
-                            Label("VideoTEST", systemImage: "triangle.fill")
-                        }
+                    
+                    ZStack{
+                        let localWidth = geometry.size.width * 0.83
+                        let localHeight = geometry.size.height * 0.83
+                        Spacer()
+                        YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
+                        
+                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                        Spacer()
+                    }
+                    .tag(3)
+                    .tabItem {
+                        Label("VideoTEST", systemImage: "triangle.fill")
+                    }
                 }
                 .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
             }
