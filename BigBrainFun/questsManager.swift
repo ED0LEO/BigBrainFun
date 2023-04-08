@@ -140,6 +140,25 @@ class QuestsManager: ObservableObject {
         sqlite3_finalize(deleteStatement)
     }
     
+    func updateQuest(id: String, title: String, category: Category, isCompleted: Bool) {
+        let updateStatementString = "UPDATE Quest SET title = ?, isCompleted = ?, category = ? WHERE id = ?;"
+        var updateStatement: OpaquePointer?
+        if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(updateStatement, 1, title, -1, nil)
+            sqlite3_bind_int(updateStatement, 2, isCompleted ? 1 : 0)
+            sqlite3_bind_text(updateStatement, 3, category.rawValue, -1, nil)
+            sqlite3_bind_text(updateStatement, 4, id, -1, nil)
+            if sqlite3_step(updateStatement) == SQLITE_DONE {
+                print("Successfully updated row.")
+            } else {
+                print("Could not update row.")
+            }
+        } else {
+            print("UPDATE statement could not be prepared.")
+        }
+        sqlite3_finalize(updateStatement)
+    }
+
     func getAllQuests() -> [Quest] {
         let queryStatementString = "SELECT * FROM Quest;"
         var queryStatement: OpaquePointer?

@@ -34,7 +34,6 @@ struct PlanView: View {
     @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
-        //        quests.sorted { $0.category.rawValue < $1.category.rawValue }
         let quests = questsManager.getAllQuests()
         return quests.sorted { $0.category.rawValue < $1.category.rawValue }
     }
@@ -123,6 +122,7 @@ struct PlanView: View {
                         .padding(.horizontal)
                         .onHover { isHovering in
                             guard let index = quests.firstIndex(of: quest) else { return }
+                            let quest = quests[index]
                             quests[index].deleteButtonIsShown = isHovering
                         }
                     }
@@ -200,12 +200,19 @@ struct PlanView: View {
     }
     
     private func markQuestCompleted(quest: Quest) {
-        if let index = quests.firstIndex(of: quest) {
-            quests[index].isCompleted.toggle()
-        }
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted)
+        refreshLocalQuests()
     }
     
+    
+    private func refreshLocalQuests(){
+        quests = questsManager.getAllQuests()
+    }
+    
+    
     private func deleteQuest(at index: Int) {
+        let quest = quests[index]
+        questsManager.deleteQuest(quest: quest)
         quests.remove(at: index)
     }
     
