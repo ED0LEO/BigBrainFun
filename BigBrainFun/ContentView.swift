@@ -87,6 +87,12 @@ struct ContentView: View {
                         .tabItem {
                             Label("Guide", systemImage: "triangle.fill")
                         }
+                    YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
+                        .frame(width: 300, height: 200)
+                        .tag(3)
+                        .tabItem {
+                            Label("VideoTEST", systemImage: "triangle.fill")
+                        }
                 }
                 .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
             }
@@ -95,9 +101,6 @@ struct ContentView: View {
         }
     }
 }
-
-
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
