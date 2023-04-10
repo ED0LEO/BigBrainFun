@@ -125,12 +125,11 @@ class QuestsManager: ObservableObject {
     }
     
     func deleteQuest(quest: Quest) {
-        let deleteStatementString = "DELETE FROM Quest WHERE id = ?;"
+        let deleteStatementString = "DELETE FROM Quest WHERE id = '\(quest.id)';"
         var deleteStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
-            sqlite3_bind_text(deleteStatement, 1, quest.id, -1, nil)
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                print("Successfully deleted row.")
+                print("Successfully deleted row with id: '\(quest.id)'.")
             } else {
                 print("Could not delete row.")
             }
@@ -141,14 +140,9 @@ class QuestsManager: ObservableObject {
     }
     
     func updateQuest(id: String, title: String, category: Category, isCompleted: Bool, deleteButtonIsShown: Bool) {
-        let updateStatementString = "UPDATE Quest SET title = ?, isCompleted = ?, category = ?, deleteButtonIsShown = ? WHERE id = ?;"
+        let updateStatementString = "UPDATE Quest SET title = '\(title)', isCompleted = \(isCompleted ? 1 : 0), category = '\(category.rawValue)', deleteButtonIsShown = \(deleteButtonIsShown ? 1 : 0) WHERE id = '\(id)';"
         var updateStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
-            sqlite3_bind_text(updateStatement, 1, title, -1, nil)
-            sqlite3_bind_int(updateStatement, 2, isCompleted ? 1 : 0)
-            sqlite3_bind_text(updateStatement, 3, category.rawValue, -1, nil)
-            sqlite3_bind_int(updateStatement, 4, deleteButtonIsShown ? 1 : 0)
-            sqlite3_bind_text(updateStatement, 5, id, -1, nil)
             if sqlite3_step(updateStatement) == SQLITE_DONE {
                 print("Successfully updated row.")
             } else {
@@ -178,7 +172,7 @@ class QuestsManager: ObservableObject {
                 
                 let isCompleted = isCompletedValue != nil
                 let deleteButtonIsShown = deleteButtonIsShownValue != nil
-                let quest = Quest(title: String(cString: title),
+                let quest = Quest(id: String(cString: id), title: String(cString: title),
                                   isCompleted: isCompleted,
                                   deleteButtonIsShown: deleteButtonIsShown,
                                   category: Category(rawValue: String(cString: category)) ?? .study)

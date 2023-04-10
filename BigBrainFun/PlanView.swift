@@ -125,19 +125,19 @@ struct PlanView: View {
                                     .foregroundColor(.white)
                             }
                             .buttonStyle(BorderlessButtonStyle())
-                            .opacity(quest.deleteButtonIsShown ? 1 : 0)
+//                            .opacity(quest.deleteButtonIsShown ? 1 : 0)
                             .animation(.default)
                             
                         }
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(10)
                         .padding(.horizontal)
-                        .onHover { isHovering in
-                            if let index = sortedQuests.firstIndex(of: quest) {
-                                questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: true)
-                            }
-                            
-                        }
+//                        .onHover { isHovering in
+//                            if let index = sortedQuests.firstIndex(of: quest) {
+//                                questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: true)
+//                            }
+//
+//                        }
                     }
                 }
                 
@@ -213,7 +213,7 @@ struct PlanView: View {
     }
     
     private func markQuestCompleted(quest: Quest) {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: false)
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: quest.deleteButtonIsShown)
     }
     
     private func deleteQuest(quest: Quest) {
@@ -226,7 +226,7 @@ struct PlanView: View {
     
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
-            let q = Quest(title: title, category: category)
+            let q = Quest(id: UUID().uuidString, title: title, category: category)
             questsManager.insertQuest(quest: q)
             print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
         }
@@ -267,7 +267,7 @@ enum Category: String, CaseIterable {
 }
 
 struct Quest: Identifiable, Equatable {
-    let id = UUID().uuidString
+    let id: String
     var title: String
     var isCompleted = false
     var deleteButtonIsShown = false
