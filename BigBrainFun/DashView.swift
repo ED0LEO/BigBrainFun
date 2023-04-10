@@ -12,6 +12,7 @@ struct WinView: View {
     @State private var rotation: Double = 0
     @State private var opacity: Double = 0
     @Binding var won: Bool
+    @Binding var winnerVideo: YouTubeVideoPlayerView
     
     var body: some View {
         VStack {
@@ -23,9 +24,7 @@ struct WinView: View {
             
             Spacer()
             
-            Image(systemName: "dollarsign.circle.fill")
-                .font(.system(size: 150))
-                .foregroundColor(.green)
+            winnerVideo
                 .rotationEffect(.degrees(rotation))
                 .scaleEffect(scale)
                 .opacity(opacity)
@@ -66,9 +65,10 @@ struct PlayView: View{
         YouTubeVideoPlayerView(videoID: "OYWZF43A5MU")
     ]
     @State private var reel1: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
-    @State private var reel2: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
-    @State private var reel3: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
+    @State private var reel2: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "iYjpElPF8K0")
+    @State private var reel3: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "OYWZF43A5MU")
     @Binding var won: Bool
+    @Binding var winnerVideo: YouTubeVideoPlayerView
     
     var body: some View{
         VStack{
@@ -91,40 +91,41 @@ struct PlayView: View{
             
             GeometryReader { geometry in
                 HStack(spacing: 40) {
-                    
+                    Spacer()
                     ZStack{
-                        let localWidth = geometry.size.width * 0.83
+                        let localWidth = geometry.size.width * 0.27
                         let localHeight = geometry.size.height * 0.83
-                        Spacer()
+//                        Spacer()
                         reel1
                             .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
-                        Spacer()
+                            .aspectRatio(contentMode: .fill)
+//                        Spacer()
                     }
                     
                     ZStack{
-                        let localWidth = geometry.size.width * 0.83
+                        let localWidth = geometry.size.width * 0.27
                         let localHeight = geometry.size.height * 0.83
-                        Spacer()
+//                        Spacer()
                         reel2
                             .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
-                        Spacer()
+                            .aspectRatio(contentMode: .fill)
+//                        Spacer()
                     }
                     
                     ZStack{
-                        let localWidth = geometry.size.width * 0.83
+                        let localWidth = geometry.size.width * 0.27
                         let localHeight = geometry.size.height * 0.83
-                        Spacer()
+//                        Spacer()
                         reel3
                             .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
-                        Spacer()
+                            .aspectRatio(contentMode: .fill)
+//                        Spacer()
                     }
-                    
-                    //                reel1.frame(width: 50, height: 50)
-                    //                reel2.frame(width: 50, height: 50)
-                    //                reel3.frame(width: 50, height: 50)
+                    Spacer()
                 }
-                .frame(height: 150)
+                .frame(width: geometry.size.width * 0.83)
             }
+
             Spacer()
             
             Button("Roll", action: spinReels)
@@ -174,6 +175,7 @@ struct PlayView: View{
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
             if reel1.videoID == reel2.videoID && reel2.videoID == reel3.videoID {
                 won = true
+                winnerVideo = reel1
             }
             isRolling = false
         }
@@ -182,17 +184,18 @@ struct PlayView: View{
 
 struct DashView: View{
     @State private var winningTime = false
+    @State private var winnerVideo = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
     
     var body: some View{
         VStack{
             if !winningTime {
-                PlayView(won: $winningTime)
+                PlayView(won: $winningTime, winnerVideo: $winnerVideo)
                     .animation(
                         Animation.spring(response: 0.5, dampingFraction: 0.5)
                             .speed(1.5)
                     )
             } else {
-                WinView(won: $winningTime)
+                WinView(won: $winningTime, winnerVideo: $winnerVideo)
                     .animation(
                         Animation.interpolatingSpring(stiffness: 100, damping: 10)
                     )
