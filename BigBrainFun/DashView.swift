@@ -87,46 +87,38 @@ struct PlayView: View{
             .padding(.bottom)
             .padding(.horizontal, 30)
             
-            Spacer()
             
             GeometryReader { geometry in
                 HStack(spacing: 40) {
                     Spacer()
-                    ZStack{
-                        let localWidth = geometry.size.width * 0.27
-                        let localHeight = geometry.size.height * 0.83
-//                        Spacer()
+                    VStack(spacing: 0) {
+                        Spacer()
                         reel1
-                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                            .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
-//                        Spacer()
+                        Spacer()
                     }
                     
-                    ZStack{
-                        let localWidth = geometry.size.width * 0.27
-                        let localHeight = geometry.size.height * 0.83
-//                        Spacer()
+                    VStack(spacing: 0) {
+                        Spacer()
                         reel2
-                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                            .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
-//                        Spacer()
+                        Spacer()
                     }
                     
-                    ZStack{
-                        let localWidth = geometry.size.width * 0.27
-                        let localHeight = geometry.size.height * 0.83
-//                        Spacer()
+                    VStack(spacing: 0) {
+                        Spacer()
                         reel3
-                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                            .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
-//                        Spacer()
+                        Spacer()
                     }
                     Spacer()
                 }
-                .frame(width: geometry.size.width * 0.83)
             }
 
-            Spacer()
+
             
             Button("Roll", action: spinReels)
                 .buttonStyle(GrowingGradButton())
