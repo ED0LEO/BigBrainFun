@@ -13,6 +13,7 @@
 		0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */; };
 		0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
+		0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB64D8C29E463A200866CE3 /* QuestViews.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
 		0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDE29D89BAF00632086 /* ContentView.swift */; };
 		0CE0BBE129D89BB000632086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CE0BBE029D89BB000632086 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeVideoPlayerView.swift; sourceTree = "<group>"; };
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0CB64D8C29E463A200866CE3 /* QuestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViews.swift; sourceTree = "<group>"; };
 		0CE0BBD929D89BAF00632086 /* BigBrainFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BigBrainFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunApp.swift; sourceTree = "<group>"; };
 		0CE0BBDE29D89BAF00632086 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				0C95C42F29DA3CA00070832C /* Info.plist */,
+				0CB64D8C29E463A200866CE3 /* QuestViews.swift */,
 				0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
@@ -301,6 +304,7 @@
 				0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */,
 				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,
 				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
+				0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */,
 				0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */,
 				0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */,
 				0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */,

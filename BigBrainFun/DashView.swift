@@ -60,10 +60,14 @@ struct WinView: View {
 
 struct PlayView: View{
     @State private var isRolling = false
-    @State private var videos = ["star", "heart", "questionmark"]
-    @State private var reel1 = "star"
-    @State private var reel2 = "heart"
-    @State private var reel3 = "questionmark"
+    @State private var videos: [YouTubeVideoPlayerView] = [
+        YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8"),
+        YouTubeVideoPlayerView(videoID: "iYjpElPF8K0"),
+        YouTubeVideoPlayerView(videoID: "OYWZF43A5MU")
+    ]
+    @State private var reel1: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
+    @State private var reel2: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
+    @State private var reel3: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
     @Binding var won: Bool
     
     var body: some View{
@@ -85,22 +89,42 @@ struct PlayView: View{
             
             Spacer()
             
-            HStack(spacing: 40) {
-                Image(systemName: reel1)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.white)
-                Image(systemName: reel2)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.white)
-                Image(systemName: reel3)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.white)
+            GeometryReader { geometry in
+                HStack(spacing: 40) {
+                    
+                    ZStack{
+                        let localWidth = geometry.size.width * 0.83
+                        let localHeight = geometry.size.height * 0.83
+                        Spacer()
+                        reel1
+                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                        Spacer()
+                    }
+                    
+                    ZStack{
+                        let localWidth = geometry.size.width * 0.83
+                        let localHeight = geometry.size.height * 0.83
+                        Spacer()
+                        reel2
+                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                        Spacer()
+                    }
+                    
+                    ZStack{
+                        let localWidth = geometry.size.width * 0.83
+                        let localHeight = geometry.size.height * 0.83
+                        Spacer()
+                        reel3
+                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                        Spacer()
+                    }
+                    
+                    //                reel1.frame(width: 50, height: 50)
+                    //                reel2.frame(width: 50, height: 50)
+                    //                reel3.frame(width: 50, height: 50)
+                }
+                .frame(height: 150)
             }
-            .frame(height: 150)
-            
             Spacer()
             
             Button("Roll", action: spinReels)
@@ -148,7 +172,7 @@ struct PlayView: View{
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-            if reel1 == reel2 && reel2 == reel3 {
+            if reel1.videoID == reel2.videoID && reel2.videoID == reel3.videoID {
                 won = true
             }
             isRolling = false

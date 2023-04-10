@@ -23,10 +23,46 @@ extension Text {
     }
 }
 
+struct CategoryPickerView: View {
+    @Binding var selectedCategory: Category
+    
+    var categories: [Category] {
+        Category.allCases
+    }
+    
+    var body: some View {
+        Picker(selection: $selectedCategory, label: Text("Category")) {
+            ForEach(categories, id: \.self) { category in
+                Text(category.rawValue)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        ZStack {
+                            if selectedCategory == category {
+                                LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing)
+                            } else {
+                                Color.gray.opacity(0.4)
+                            }
+                        }
+                    )
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(selectedCategory == category ? Color.blue : Color.clear, lineWidth: 2)
+                    )
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.horizontal)
+    }
+}
+
+
+
 struct PlanView: View {
     @EnvironmentObject var questsManager: QuestsManager
     @State private var newQuest = ""
-    @State private var quests = [Quest]()
     @State private var isComplete = false
     @State private var isPopoverPresented = false
     @State private var selectedCategory: Category = .study
@@ -49,30 +85,7 @@ struct PlanView: View {
                     .titleStyle()
                     .padding(.bottom)
                 
-                Picker(selection: $selectedCategory, label: Text("Category")) {
-                    ForEach(categories, id: \.self) { category in
-                        Text(category.rawValue)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                ZStack {
-                                    if selectedCategory == category {
-                                        LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing)
-                                    } else {
-                                        Color.gray.opacity(0.4)
-                                    }
-                                }
-                            )
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(selectedCategory == category ? Color.blue : Color.clear, lineWidth: 2)
-                            )
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal)
+                CategoryPickerView(selectedCategory: $selectedCategory)
                 
                 ScrollView {
                     ForEach(sortedQuests.filter { $0.category == selectedCategory }) { quest in
@@ -104,26 +117,26 @@ struct PlanView: View {
                             
                             Spacer()
                             
-                            if let index = quests.firstIndex(of: quest) {
-                                Button(action: {
-                                    deleteQuest(at: index)
-                                }) {
-                                    Image(systemName: "trash.circle.fill")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(.white)
-                                }
-                                .buttonStyle(BorderlessButtonStyle())
-                                .opacity(quests[index].deleteButtonIsShown ? 1 : 0)
-                                .animation(.default)
+                            Button(action: {
+                                deleteQuest(quest: quest)
+                            }) {
+                                Image(systemName: "trash.circle.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
                             }
+                            .buttonStyle(BorderlessButtonStyle())
+                            .opacity(quest.deleteButtonIsShown ? 1 : 0)
+                            .animation(.default)
+                            
                         }
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(10)
                         .padding(.horizontal)
                         .onHover { isHovering in
-                            guard let index = quests.firstIndex(of: quest) else { return }
-                            let quest = quests[index]
-                            quests[index].deleteButtonIsShown = isHovering
+                            if let index = sortedQuests.firstIndex(of: quest) {
+                                questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: true)
+                            }
+                            
                         }
                     }
                 }
@@ -189,7 +202,7 @@ struct PlanView: View {
     }
     
     private func checkIfQuestCompleted() {
-        for quest in quests {
+        for quest in sortedQuests {
             if quest.isCompleted {
                 isComplete = true
                 return
@@ -200,32 +213,24 @@ struct PlanView: View {
     }
     
     private func markQuestCompleted(quest: Quest) {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted)
-        refreshLocalQuests()
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: false)
     }
     
-    
-    private func refreshLocalQuests(){
-        quests = questsManager.getAllQuests()
-    }
-    
-    
-    private func deleteQuest(at index: Int) {
-        let quest = quests[index]
+    private func deleteQuest(quest: Quest) {
         questsManager.deleteQuest(quest: quest)
-        quests.remove(at: index)
+        print("deleteQuest: tit = " + quest.title + ", cat = " + quest.category.rawValue + ", id = " + quest.id)
+        
+        print("ALL:")
+        questsManager.printAllQuests()
     }
     
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
             let q = Quest(title: title, category: category)
-            quests.append(q)
             questsManager.insertQuest(quest: q)
             print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
         }
         newQuest = ""
-        
-        questsManager.printAllQuests()
     }
 }
 
