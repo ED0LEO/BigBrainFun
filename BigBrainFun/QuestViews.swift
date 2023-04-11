@@ -12,6 +12,8 @@ struct QuestDetailsView: View {
     @State private var isQuestDone = false
     @State private var fileURL: URL?
     
+    let onClose: () -> Void
+    
     let quest: Quest
 
     var body: some View {
@@ -55,6 +57,17 @@ struct QuestDetailsView: View {
                 })
             }
             .padding()
+            
+            Button(action: {
+                            onClose()
+                        }) {
+                            Text("Close")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.red)
+                                .cornerRadius(8)
+                        }
         }
         .padding()
     }

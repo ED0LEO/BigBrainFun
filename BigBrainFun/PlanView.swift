@@ -58,13 +58,16 @@ struct CategoryPickerView: View {
     }
 }
 
-struct PlanView: View {
+struct QuestsView: View {
     @EnvironmentObject var questsManager: QuestsManager
     @State private var newQuest = ""
     @State private var isComplete = false
     @State private var isPopoverPresented = false
     @State private var selectedCategory: Category = .study
     @State private var addCategory: Category = .study
+    
+    
+    var onQuestSelected: ((Quest) -> Void)?
     @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
@@ -90,6 +93,7 @@ struct PlanView: View {
                         HStack {
                             Button(action: {
                                 markQuestCompleted(quest: quest)
+                                onQuestSelected?(quest)
                             }) {
                                 Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
                                     .font(.system(size: 24))
@@ -123,19 +127,19 @@ struct PlanView: View {
                                     .foregroundColor(.white)
                             }
                             .buttonStyle(BorderlessButtonStyle())
-//                            .opacity(quest.deleteButtonIsShown ? 1 : 0)
+                            //                            .opacity(quest.deleteButtonIsShown ? 1 : 0)
                             .animation(.default)
                             
                         }
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(10)
                         .padding(.horizontal)
-//                        .onHover { isHovering in
-//                            if let index = sortedQuests.firstIndex(of: quest) {
-//                                questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: true)
-//                            }
-//
-//                        }
+                        //                        .onHover { isHovering in
+                        //                            if let index = sortedQuests.firstIndex(of: quest) {
+                        //                                questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: true)
+                        //                            }
+                        //
+                        //                        }
                     }
                 }
                 
@@ -229,6 +233,25 @@ struct PlanView: View {
             print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
         }
         newQuest = ""
+    }
+}
+
+struct PlanView: View {
+    @State private var isQuestOpened = false
+    @State private var selectedQuest: Quest? = nil
+    
+    var body: some View{
+        VStack{
+            if selectedQuest == nil {
+                QuestsView(onQuestSelected: { quest in
+                    selectedQuest = quest
+                })
+            } else {
+                QuestDetailsView(onClose: {
+                    selectedQuest = nil
+                }, quest: selectedQuest!)
+            }
+        }
     }
 }
 
