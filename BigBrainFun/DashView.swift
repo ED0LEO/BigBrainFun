@@ -117,8 +117,6 @@ struct PlayView: View{
                     Spacer()
                 }
             }
-
-
             
             Button("Roll", action: spinReels)
                 .buttonStyle(GrowingGradButton())
@@ -194,7 +192,6 @@ struct DashView: View{
             }
         }
     }
-    
 }
 
 struct DashView_Previews: PreviewProvider {

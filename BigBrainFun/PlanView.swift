@@ -58,8 +58,6 @@ struct CategoryPickerView: View {
     }
 }
 
-
-
 struct PlanView: View {
     @EnvironmentObject var questsManager: QuestsManager
     @State private var newQuest = ""
