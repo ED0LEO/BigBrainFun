@@ -18,18 +18,34 @@ struct QuestDetailsView: View {
 
     var body: some View {
         VStack {
-            Text(quest.title)
-                .font(.title)
-                .padding()
+            HStack {
+                Text(quest.title)
+                    .font(.title)
+                    .padding()
+                    .foregroundColor(.black)
+                
+                Spacer()
+                
+                Button(action: {
+                    onClose()
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                .padding(.top, 20)
+            }
+            .padding(.horizontal, 20)
             
             Text(quest.category.rawValue)
                 .font(.headline)
                 .padding(.bottom)
+                .foregroundColor(.black)
             
             Text("Quest details go here...")
                 .padding()
-            
-            Spacer()
+                .foregroundColor(.black)
             
             HStack {
                 Button(action: {
@@ -50,25 +66,33 @@ struct QuestDetailsView: View {
                     }
                 }, label: {
                     Text("Upload File")
-                        .padding()
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 20)
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 })
             }
-            .padding()
+            .padding(.bottom, 30)
+            
+            Spacer()
             
             Button(action: {
-                            onClose()
-                        }) {
-                            Text("Close")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.red)
-                                .cornerRadius(8)
-                        }
+                onClose()
+            }) {
+                Text("Close")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 15)
+                    .padding(.horizontal, 30)
+                    .background(Color.red)
+                    .cornerRadius(10)
+            }
+            .padding(.bottom, 30)
         }
-        .padding()
+        .frame(width: 500, height: 500)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 10)
     }
 }
