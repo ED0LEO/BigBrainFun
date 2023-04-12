@@ -208,16 +208,11 @@ struct QuestsView: View {
 
 struct QuestDetailsView: View {
     @EnvironmentObject var questsManager: QuestsManager
-    @State private var fileURL: URL?
+    @Binding var fileURL: URL?
     @State var quest: Quest
     @Binding var analyzing: Bool
     
     let onClose: () -> Void
-    
-//    init(quest: Quest, onClose: @escaping () -> Void) {
-//        self._quest = State(initialValue: quest)
-//        self.onClose = onClose
-//    }
     
     private func deleteQuest() {
         questsManager.deleteQuest(quest: quest)
@@ -327,7 +322,7 @@ struct QuestDetailsView: View {
                 Button(action: {
                     analyzing.toggle()
                 }) {
-                    Text("Analyze File")
+                    Text("Send to analysis")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(.vertical, 15)

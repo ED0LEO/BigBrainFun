@@ -26,6 +26,8 @@ extension Text {
 struct PlanView: View {
     @State private var isAnalyzing = false
     @State private var selectedQuest: Quest? = nil
+    @State private var fileURL: URL?
+
     
     var body: some View{
         VStack{
@@ -34,13 +36,13 @@ struct PlanView: View {
                     selectedQuest = quest
                 })
             } else if !isAnalyzing {
-                QuestDetailsView(quest: selectedQuest!, analyzing: $isAnalyzing, onClose: {
+                QuestDetailsView(fileURL: $fileURL, quest: selectedQuest!, analyzing: $isAnalyzing, onClose: {
                     selectedQuest = nil
                 })
             }
             else
             {
-                QuestFileAnalysisView(quest: selectedQuest!, onClose: {
+                QuestFileAnalysisView(quest: selectedQuest!, selectedFileURL: $fileURL, onClose: {
                     isAnalyzing = false
                 })
             }

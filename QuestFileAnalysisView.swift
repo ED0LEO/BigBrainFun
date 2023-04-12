@@ -43,7 +43,7 @@ struct ImageView: View {
 
 struct QuestFileAnalysisView: View {
     let quest: Quest
-    @State private var selectedFileURL: URL?
+    @Binding var selectedFileURL: URL?
     @State private var analysisResult: String?
     
     let onClose: () -> Void
