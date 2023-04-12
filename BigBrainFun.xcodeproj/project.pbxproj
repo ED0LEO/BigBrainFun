@@ -14,6 +14,7 @@
 		0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
 		0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB64D8C29E463A200866CE3 /* QuestViews.swift */; };
+		0CC17D3A29E73C5E00F10C36 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC17D3929E73C5E00F10C36 /* BrowserView.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
 		0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDE29D89BAF00632086 /* ContentView.swift */; };
 		0CE0BBE129D89BB000632086 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CE0BBE029D89BB000632086 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CB64D8C29E463A200866CE3 /* QuestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViews.swift; sourceTree = "<group>"; };
+		0CC17D3929E73C5E00F10C36 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
 		0CE0BBD929D89BAF00632086 /* BigBrainFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BigBrainFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBrainFunApp.swift; sourceTree = "<group>"; };
 		0CE0BBDE29D89BAF00632086 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -109,7 +111,6 @@
 		0CE0BBD029D89BAF00632086 = {
 			isa = PBXGroup;
 			children = (
-				0CFF077929E6365F00AE8758 /* QuestFileAnalysisView.swift */,
 				0CE0BBDB29D89BAF00632086 /* BigBrainFun */,
 				0CE0BBED29D89BB000632086 /* BigBrainFunTests */,
 				0CE0BBF729D89BB000632086 /* BigBrainFunUITests */,
@@ -132,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				0C95C42F29DA3CA00070832C /* Info.plist */,
+				0CFF077929E6365F00AE8758 /* QuestFileAnalysisView.swift */,
 				0CB64D8C29E463A200866CE3 /* QuestViews.swift */,
 				0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
@@ -145,6 +147,7 @@
 				0CE0BBE029D89BB000632086 /* Assets.xcassets */,
 				0CE0BBE529D89BB000632086 /* BigBrainFun.entitlements */,
 				0CE0BBE229D89BB000632086 /* Preview Content */,
+				0CC17D3929E73C5E00F10C36 /* BrowserView.swift */,
 			);
 			path = BigBrainFun;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */,
 				0CE8E0FB29D8F8D300983BC7 /* RulesView.swift in Sources */,
 				0CE8E0FD29D90CC200983BC7 /* PlanView.swift in Sources */,
+				0CC17D3A29E73C5E00F10C36 /* BrowserView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

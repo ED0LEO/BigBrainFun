@@ -101,6 +101,12 @@ struct ContentView: View {
                     .tabItem {
                         Label("VideoTEST", systemImage: "triangle.fill")
                     }
+                    
+                    BrowserView(tabViewController: TabViewController(url: URL(string: "https://www.google.com")!))
+                        .tag(4)
+                        .tabItem {
+                            Label("Browser", systemImage: "triangle.fill")
+                        }
                 }
                 .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
             }
