@@ -184,7 +184,7 @@ struct QuestsView: View {
     }
     
     private func markQuestCompleted(quest: Quest) {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: quest.deleteButtonIsShown)
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
     }
     
     private func deleteQuest(quest: Quest) {
@@ -223,7 +223,7 @@ struct QuestDetailsView: View {
     }
     
     private func toggleCompletion() {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, deleteButtonIsShown: quest.deleteButtonIsShown)
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
         quest.isCompleted.toggle() // update the local quest state variable as well
         
         print("ALL:")
@@ -231,120 +231,109 @@ struct QuestDetailsView: View {
     }
     
     var body: some View {
-            VStack {
-                HStack {
-                    Text(quest.title)
-                        .font(.title)
-                        .padding()
-                        .foregroundColor(.black)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        onClose()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.red)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .padding(.top, 20)
-                }
-                .padding(.horizontal, 20)
-                
-                Text(quest.category.rawValue)
-                    .font(.headline)
-                    .padding(.bottom)
-                    .foregroundColor(.black)
-                
-                Text("Quest details go here...")
+        VStack {
+            HStack {
+                Text(quest.title)
+                    .font(.title)
                     .padding()
                     .foregroundColor(.black)
-                
-                HStack {
-                    Button(action: {
-                        toggleCompletion()
-                    }, label: {
-                        Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
-                            .font(.system(size: 24))
-                            .foregroundColor(.green)
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        let openPanel = NSOpenPanel()
-                        openPanel.allowedFileTypes = ["pdf", "jpg", "png"]
-                        if openPanel.runModal() == NSApplication.ModalResponse.OK {
-                            fileURL = openPanel.url
-                        }
-                    }, label: {
-                        Text("Upload File")
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 20)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        deleteQuest()
-                        onClose()
-                    }) {
-                        Text("Delete Quest")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 20)
-                            .background(Color.red)
-                            .cornerRadius(10)
-                    }
-                }
-                .padding(.bottom, 30)
-                
-                Button(action: {
-                    toggleCompletion()
-                }) {
-                    Text(quest.isCompleted ? "Mark as Incomplete" : "Mark as Completed")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 30)
-                        .background(Color.green)
-                        .cornerRadius(10)
-                }
-                .padding(.bottom, 30)
                 
                 Spacer()
                 
                 Button(action: {
-                    analyzing.toggle()
-                }) {
-                    Text("Send to analysis")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 30)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .padding(.bottom, 30)
-                
-                Button(action: {
                     onClose()
                 }) {
-                    Text("Close")
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                .padding(.top, 20)
+            }
+            .padding(.horizontal, 20)
+            
+            Text(quest.category.rawValue)
+                .font(.headline)
+                .padding(.bottom)
+                .foregroundColor(.black)
+            
+            Text("Quest details go here...")
+                .padding()
+                .foregroundColor(.black)
+            
+            HStack {
+                Button(action: {
+                    toggleCompletion()
+                }, label: {
+                    Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 24))
+                        .foregroundColor(.green)
+                })
+                
+                Spacer()
+                
+                Button(action: {
+                    let openPanel = NSOpenPanel()
+                    openPanel.allowedFileTypes = ["pdf", "jpg", "png"]
+                    if openPanel.runModal() == NSApplication.ModalResponse.OK {
+                        fileURL = openPanel.url
+                    }
+                }, label: {
+                    Text("Upload File")
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 20)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                })
+                
+                Spacer()
+                
+                Button(action: {
+                    deleteQuest()
+                    onClose()
+                }) {
+                    Text("Delete Quest")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(.vertical, 15)
-                        .padding(.horizontal, 30)
-                        .background(Color.gray)
+                        .padding(.horizontal, 20)
+                        .background(Color.red)
                         .cornerRadius(10)
                 }
-                .padding(.bottom, 30)
+            }
             .padding(.bottom, 30)
+            
+            Button(action: {
+                toggleCompletion()
+            }) {
+                Text(quest.isCompleted ? "Mark as Incomplete" : "Mark as Completed")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 15)
+                    .padding(.horizontal, 30)
+                    .background(Color.green)
+                    .cornerRadius(10)
+            }
+            .padding(.bottom, 30)
+            
+            Spacer()
+            if let fileURL = fileURL {
+                ImageView(fileURL: fileURL)
+            }
+            Button(action: {
+                analyzing.toggle()
+            }) {
+                Text("Send to analysis")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 15)
+                    .padding(.horizontal, 30)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+            .padding(.bottom, 30)
+            
         }
         .frame(width: 500, height: 500)
         .background(Color.white)

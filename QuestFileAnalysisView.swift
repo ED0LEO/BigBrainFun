@@ -90,16 +90,28 @@ struct QuestFileAnalysisView: View {
             print("Error analyzing file: \(error.localizedDescription)")
         }
     }
-
-
-
     
     var body: some View {
         VStack {
-            Text("Analyze File for Quest: \(quest.title)")
-                .font(.title)
-                .padding()
-                .foregroundColor(.black)
+            HStack {
+                Text("Analyze File for Quest: \(quest.title)")
+                    .font(.title)
+                    .padding()
+                    .foregroundColor(.black)
+                
+                Spacer()
+                
+                Button(action: {
+                    onClose()
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                .padding(.top, 20)
+            }
+            .padding(.horizontal, 20)
             
             if let fileURL = selectedFileURL {
                 ImageView(fileURL: fileURL)
@@ -132,6 +144,7 @@ struct QuestFileAnalysisView: View {
             }
             .padding(.bottom, 30)
             
+            Spacer()
             Button(action: {
                 analyzeFile()
             }) {
@@ -146,25 +159,14 @@ struct QuestFileAnalysisView: View {
             .padding(.bottom, 30)
             
             if let result = analysisResult {
-                Text(result)
-                    .padding()
-                    .foregroundColor(.black)
+                ScrollView {
+                    Text(result)
+                        .padding()
+                        .foregroundColor(.black)
+                }
+                .frame(height: 100)
+                .padding(.bottom, 30)
             }
-            
-            Spacer()
-            
-            Button(action: {
-                onClose()
-            }) {
-                Text("Close")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 15)
-                    .padding(.horizontal, 30)
-                    .background(Color.gray)
-                    .cornerRadius(10)
-            }
-            .padding(.bottom, 30)
         }
         .frame(width: 500, height: 500)
         .background(Color.white)

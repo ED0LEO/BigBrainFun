@@ -27,7 +27,7 @@ struct PlanView: View {
     @State private var isAnalyzing = false
     @State private var selectedQuest: Quest? = nil
     @State private var fileURL: URL?
-
+    
     
     var body: some View{
         VStack{
@@ -86,7 +86,7 @@ struct Quest: Identifiable, Equatable {
     var id: String
     var title: String
     var isCompleted = false
-    var deleteButtonIsShown = false
+    var documentURL: URL?
     var category: Category
 }
 
