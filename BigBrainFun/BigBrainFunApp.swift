@@ -30,7 +30,7 @@ struct SideButtonStyle: ButtonStyle {
 
 @main
 struct BigBrainFunApp: App {
-    @State private var showCalendar = true
+    @State private var showCalendar = false
     let questsManager = QuestsManager()
     
     var body: some Scene {

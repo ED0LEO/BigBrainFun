@@ -144,7 +144,8 @@ class QuestsManager: ObservableObject {
         var updateStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
             if sqlite3_step(updateStatement) == SQLITE_DONE {
-                print("Successfully updated row.")
+                print("Successfully deleted row with completion: '\(isCompleted)'.")
+//                objectWillChange.send()
             } else {
                 print("Could not update row.")
             }
@@ -185,6 +186,53 @@ class QuestsManager: ObservableObject {
         
         return quests
     }
+    
+    func getAllQuestIds() -> [String] {
+        let queryStatementString = "SELECT id FROM Quest;"
+        var queryStatement: OpaquePointer?
+        var questIds: [String] = []
+        
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let id = sqlite3_column_text(queryStatement, 0) else {
+                    continue
+                }
+                questIds.append(String(cString: id))
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+        
+        sqlite3_finalize(queryStatement)
+        return questIds
+    }
+
+    
+    func getQuestById(id: String) -> Quest? {
+        let queryStatementString = "SELECT * FROM Quest WHERE id = '\(id)';"
+        var queryStatement: OpaquePointer?
+        var quest: Quest?
+
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                let title = String(cString: sqlite3_column_text(queryStatement, 1))
+                let isCompletedValue = sqlite3_column_int(queryStatement, 2)
+                let deleteButtonIsShownValue = sqlite3_column_int(queryStatement, 3)
+                let category = Category(rawValue: String(cString: sqlite3_column_text(queryStatement, 4))) ?? .study
+                
+                let isCompleted = isCompletedValue != 0
+                let deleteButtonIsShown = deleteButtonIsShownValue != 0
+                
+                quest = Quest(id: id, title: title, isCompleted: isCompleted, deleteButtonIsShown: deleteButtonIsShown, category: category)
+            }
+        } else {
+            print("SELECT statement could not be prepared")
+        }
+
+        sqlite3_finalize(queryStatement)
+        return quest
+    }
+
     
     deinit {
         closeDatabase()

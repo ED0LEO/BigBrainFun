@@ -24,6 +24,7 @@
 		0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0D04329D9DC8E00ABA468 /* DashView.swift */; };
 		0CE8E0FB29D8F8D300983BC7 /* RulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */; };
 		0CE8E0FD29D90CC200983BC7 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8E0FC29D90CC200983BC7 /* PlanView.swift */; };
+		0CFF077A29E6365F00AE8758 /* QuestFileAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFF077929E6365F00AE8758 /* QuestFileAnalysisView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		0CE0D04329D9DC8E00ABA468 /* DashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashView.swift; sourceTree = "<group>"; };
 		0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesView.swift; sourceTree = "<group>"; };
 		0CE8E0FC29D90CC200983BC7 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		0CFF077929E6365F00AE8758 /* QuestFileAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestFileAnalysisView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		0CE0BBD029D89BAF00632086 = {
 			isa = PBXGroup;
 			children = (
+				0CFF077929E6365F00AE8758 /* QuestFileAnalysisView.swift */,
 				0CE0BBDB29D89BAF00632086 /* BigBrainFun */,
 				0CE0BBED29D89BB000632086 /* BigBrainFunTests */,
 				0CE0BBF729D89BB000632086 /* BigBrainFunUITests */,
@@ -302,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */,
+				0CFF077A29E6365F00AE8758 /* QuestFileAnalysisView.swift in Sources */,
 				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,
 				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
 				0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */,
