@@ -13,7 +13,6 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     
     // MARK: Properties
     
-    
     let webView = WKWebView()
     
     // MARK: Initialization
@@ -36,7 +35,15 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     // MARK: Public methods
     
     func load(_ url: URL) {
-        webView.load(URLRequest(url: url))
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
+        
+        // Check if URL has a scheme
+        if urlComponents.scheme == nil {
+            // If it doesn't have a scheme, add http:// as the default
+            urlComponents.scheme = "http"
+        }
+        
+        webView.load(URLRequest(url: urlComponents.url!))
     }
     
     func goBack() {
@@ -59,8 +66,28 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         view.window?.title = webView.title ?? "Untitled"
+        
+        // Find the content view
+        guard let contentView = view.superview else {
+            print("Error: Could not find content view")
+            return
+        }
+        
+        // Access the stack view
+        guard let foundStackView = contentView.superview?.subviews.first(where: { $0 is NSStackView }) as? NSStackView else {
+            print("Error: Could not find stack view")
+            return
+        }
+        
+        // Access the address panel
+        guard let foundAddressPanel = foundStackView.arrangedSubviews.first(where: { $0 is AddressPanel }) as? AddressPanel else {
+            print("Error: Could not find address panel")
+            return
+        }
+        
+        // Update the text field with the current URL
+        foundAddressPanel.updateTextField(with: webView.url)
     }
-    
 }
 
 struct BrowserView: NSViewRepresentable {
@@ -80,6 +107,7 @@ struct BrowserView: NSViewRepresentable {
         view.frame.size = NSSize(width: 400, height: 400)
         
         let stackView = NSStackView()
+        stackView.identifier = NSUserInterfaceItemIdentifier("browserStackView")
         stackView.orientation = .vertical
         stackView.spacing = 0
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +142,7 @@ struct BrowserView: NSViewRepresentable {
     
 }
 
+
 class AddressPanel: NSView, NSTextFieldDelegate {
     
     // MARK: Properties
@@ -127,7 +156,7 @@ class AddressPanel: NSView, NSTextFieldDelegate {
         self.tabViewController = tabViewController
         super.init(frame: .zero)
         
-        textField.placeholderString = "Enter a URL"
+        textField.placeholderString = "https://www.google.com"
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
         
@@ -138,11 +167,11 @@ class AddressPanel: NSView, NSTextFieldDelegate {
             textField.heightAnchor.constraint(equalToConstant: 30),
             textField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20) // Increase the constant to increase the height
         ])
-
+        
         textField.delegate = self
         textField.sendAction(#selector(NSTextFieldDelegate.controlTextDidEndEditing(_:)), to: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -157,14 +186,17 @@ class AddressPanel: NSView, NSTextFieldDelegate {
         }
     }
     
-    func controlTextDidEndEditing(_ obj: Notification) {
-            guard let textField = obj.object as? NSTextField else { return }
-            let urlString = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !urlString.isEmpty, let url = URL(string: urlString) {
-                tabViewController.load(url)
-            }
-        }
+    func updateTextField(with url: URL?) {
+        textField.stringValue = url?.absoluteString ?? ""
+    }
     
+    func controlTextDidEndEditing(_ obj: Notification) {
+        guard let textField = obj.object as? NSTextField else { return }
+        let urlString = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !urlString.isEmpty, let url = URL(string: urlString) {
+            tabViewController.load(url)
+        }
+    }
 }
 
 
