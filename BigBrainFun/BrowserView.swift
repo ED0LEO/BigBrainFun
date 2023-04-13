@@ -183,6 +183,8 @@ class AddressPanel: NSView, NSTextFieldDelegate {
         
         textField.placeholderString = "https://www.google.com"
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.maximumNumberOfLines = 1
+        textField.lineBreakMode = .byTruncatingTail
         addSubview(textField)
         
         NSLayoutConstraint.activate([
