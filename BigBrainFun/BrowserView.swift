@@ -46,19 +46,19 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         webView.load(URLRequest(url: urlComponents.url!))
     }
     
-    func goBack() {
+    @objc func goBack() {
         webView.goBack()
     }
     
-    func goForward() {
+    @objc func goForward() {
         webView.goForward()
     }
     
-    func reload() {
+    @objc func reload() {
         webView.reload()
     }
     
-    func stop() {
+    @objc func stop() {
         webView.stopLoading()
     }
     
@@ -74,7 +74,7 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         }
         
         // Access the stack view
-        guard let foundStackView = contentView.superview?.subviews.first(where: { $0 is NSStackView }) as? NSStackView else {
+        guard let foundStackView = contentView.subviews.first(where: { $0 is NSStackView }) as? NSStackView else {
             print("Error: Could not find stack view")
             return
         }
@@ -88,6 +88,7 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         // Update the text field with the current URL
         foundAddressPanel.updateTextField(with: webView.url)
     }
+
 }
 
 struct BrowserView: NSViewRepresentable {
@@ -106,11 +107,27 @@ struct BrowserView: NSViewRepresentable {
         let view = NSView()
         view.frame.size = NSSize(width: 400, height: 400)
         
-        let stackView = NSStackView()
-        stackView.identifier = NSUserInterfaceItemIdentifier("browserStackView")
-        stackView.orientation = .vertical
-        stackView.spacing = 0
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let backButton = NSButton(title: "←", target: tabViewController, action: #selector(TabViewController.goBack))
+        backButton.bezelStyle = .texturedRounded
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let forwardButton = NSButton(title: "→", target: tabViewController, action: #selector(TabViewController.goForward))
+        forwardButton.bezelStyle = .texturedRounded
+        forwardButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let reloadButton = NSButton(image: NSImage(named: NSImage.refreshTemplateName)!, target: tabViewController, action: #selector(TabViewController.reload))
+        reloadButton.bezelStyle = .texturedRounded
+        reloadButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let stopButton = NSButton(image: NSImage(named: NSImage.stopProgressTemplateName)!, target: tabViewController, action: #selector(TabViewController.stop))
+        stopButton.bezelStyle = .texturedRounded
+        stopButton.translatesAutoresizingMaskIntoConstraints = false
+
+        let buttonStackView = NSStackView(views: [backButton, forwardButton, reloadButton, stopButton])
+        buttonStackView.orientation = .horizontal
+        buttonStackView.spacing = 5
+        buttonStackView.distribution = .fillEqually
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         
         let addressPanel = AddressPanel(tabViewController: tabViewController)
         addressPanel.translatesAutoresizingMaskIntoConstraints = false
@@ -121,17 +138,25 @@ struct BrowserView: NSViewRepresentable {
         webView.layer?.cornerRadius = cornerRadius
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.addArrangedSubview(addressPanel)
-        stackView.addArrangedSubview(webView)
+        let horizontalStackView = NSStackView(views: [buttonStackView, addressPanel])
+        horizontalStackView.orientation = .horizontal
+        horizontalStackView.spacing = 10
+        horizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(stackView)
+        let verticalStackView = NSStackView(views: [horizontalStackView, webView])
+        verticalStackView.orientation = .vertical
+        verticalStackView.spacing = 0
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(verticalStackView)
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            addressPanel.heightAnchor.constraint(equalToConstant: 20),
+            verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            verticalStackView.topAnchor.constraint(equalTo: view.topAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            addressPanel.heightAnchor.constraint(equalToConstant: 30),
+            buttonStackView.widthAnchor.constraint(equalToConstant: 100),
             webView.topAnchor.constraint(equalTo: addressPanel.bottomAnchor, constant: 10)
         ])
         
@@ -164,8 +189,7 @@ class AddressPanel: NSView, NSTextFieldDelegate {
             textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             textField.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-            textField.heightAnchor.constraint(equalToConstant: 30),
-            textField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20) // Increase the constant to increase the height
+            textField.heightAnchor.constraint(equalToConstant: 25),
         ])
         
         textField.delegate = self
