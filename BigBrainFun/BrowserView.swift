@@ -14,6 +14,7 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     // MARK: Properties
     
     let webView = WKWebView()
+    let blockedURLs = ["youtube.com", "twitch.tv"]
     
     // MARK: Initialization
     
@@ -35,6 +36,12 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     // MARK: Public methods
     
     func load(_ url: URL) {
+        if shouldBlock(url: url) {
+            let alert = NSAlert()
+            alert.messageText = "Available on ⭐️ DASH ⭐️"
+            alert.runModal()
+            return
+        }
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         
         // Check if URL has a scheme
@@ -45,6 +52,16 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         
         webView.load(URLRequest(url: urlComponents.url!))
     }
+
+    func shouldBlock(url: URL) -> Bool {
+        for blockedURL in blockedURLs {
+            if url.absoluteString.lowercased().contains(blockedURL.lowercased()) {
+                return true
+            }
+        }
+        return false
+    }
+
     
     @objc func goBack() {
         webView.goBack()
@@ -63,6 +80,18 @@ class TabViewController: NSViewController, WKNavigationDelegate {
     }
     
     // MARK: WKNavigationDelegate
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            if let url = navigationAction.request.url, shouldBlock(url: url) {
+                let alert = NSAlert()
+                alert.messageText = "Available on ⭐️ DASH ⭐️"
+                alert.runModal()
+                decisionHandler(.cancel)
+                goBack()
+            } else {
+                decisionHandler(.allow)
+            }
+        }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         view.window?.title = webView.title ?? "Untitled"
