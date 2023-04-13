@@ -103,7 +103,8 @@ struct BrowserView: NSViewRepresentable {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            addressPanel.heightAnchor.constraint(equalToConstant: 20)
+            addressPanel.heightAnchor.constraint(equalToConstant: 20),
+            webView.topAnchor.constraint(equalTo: addressPanel.bottomAnchor, constant: 10)
         ])
         
         return view
@@ -134,10 +135,10 @@ class AddressPanel: NSView, NSTextFieldDelegate {
             textField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             textField.topAnchor.constraint(equalTo: topAnchor, constant: 2),
-            textField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
-            textField.heightAnchor.constraint(equalToConstant: 30)
+            textField.heightAnchor.constraint(equalToConstant: 30),
+            textField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20) // Increase the constant to increase the height
         ])
-        
+
         textField.delegate = self
         textField.sendAction(#selector(NSTextFieldDelegate.controlTextDidEndEditing(_:)), to: nil)
     }
