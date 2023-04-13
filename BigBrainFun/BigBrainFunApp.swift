@@ -38,7 +38,7 @@ struct BigBrainFunApp: App {
             VStack {
                 ContentView()
                 Button(showCalendar ? "Hide Calendar" : "Show Calendar") {
-                    showCalendar.toggle()
+                    showCalendar.toggle() 
                 }
                 .buttonStyle(SideButtonStyle())
                 .padding(5)

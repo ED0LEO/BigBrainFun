@@ -193,7 +193,6 @@ struct BrowserView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: NSView, context: Context) {}
-    
 }
 
 

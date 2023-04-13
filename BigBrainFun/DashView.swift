@@ -96,6 +96,7 @@ struct PlayView: View{
                         reel1
                             .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
+                            .disabled(true)
                         Spacer()
                     }
                     
@@ -104,6 +105,7 @@ struct PlayView: View{
                         reel2
                             .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
+                            .disabled(true)
                         Spacer()
                     }
                     
@@ -112,6 +114,7 @@ struct PlayView: View{
                         reel3
                             .frame(width: min(geometry.size.width * 0.27, geometry.size.height * 1.77), height: min(geometry.size.height * 0.5, geometry.size.width / 1.77))
                             .aspectRatio(contentMode: .fill)
+                            .disabled(true)
                         Spacer()
                     }
                     Spacer()

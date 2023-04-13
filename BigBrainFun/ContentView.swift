@@ -63,58 +63,88 @@ struct GrowingGradButton: ButtonStyle {
 
 struct ContentView: View {
     @State private var selection = 0
+    @State private var isBackgroundViewEnabled = true
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                SpinningBackgroundView()
-                
-                TabView(selection: $selection) {
-                    DashView()
-                        .tag(0)
-                        .tabItem {
-                            Label("Dash", systemImage: "circle.fill")
-                        }
-                    
-                    PlanView()
-                        .tag(1)
-                        .tabItem {
-                            Label("Quests", systemImage: "square.fill")
-                        }
-                    
-                    RulesView()
-                        .tag(2)
-                        .tabItem {
-                            Label("Guide", systemImage: "triangle.fill")
-                        }
-                    
-                    ZStack{
-                        let localWidth = geometry.size.width * 0.83
-                        let localHeight = geometry.size.height * 0.83
-                        Spacer()
-                        YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
-                        
-                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
-                        Spacer()
-                    }
-                    .tag(3)
-                    .tabItem {
-                        Label("VideoTEST", systemImage: "triangle.fill")
-                    }
-                    
-                    BrowserView(tabViewController: TabViewController(url: URL(string: "https://www.google.com")!))
-                        .tag(4)
-                        .tabItem {
-                            Label("Browser", systemImage: "triangle.fill")
-                        }
+                if isBackgroundViewEnabled {
+                    SpinningBackgroundView()
                 }
-                .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
+                else {
+                    LinearGradient(gradient: Gradient(colors: [Color(red: 0.7, green: 0.5, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.6)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                        .ignoresSafeArea()
+
+                }
+                
+                ZStack {
+                    TabView(selection: $selection) {
+                        
+                        DashView()
+                            .tag(0)
+                            .tabItem {
+                                Label("Dash", systemImage: "circle.fill")
+                            }
+                        
+                        PlanView()
+                            .tag(1)
+                            .tabItem {
+                                Label("Quests", systemImage: "square.fill")
+                            }
+                        
+                        RulesView()
+                            .tag(2)
+                            .tabItem {
+                                Label("Guide", systemImage: "triangle.fill")
+                            }
+                        
+                        ZStack{
+                            let localWidth = geometry.size.width * 0.83
+                            let localHeight = geometry.size.height * 0.83
+                            Spacer()
+                            YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
+                            
+                                .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
+                            Spacer()
+                        }
+                        .tag(3)
+                        .tabItem {
+                            Label("VideoTEST", systemImage: "triangle.fill")
+                        }
+                        
+                        BrowserView(tabViewController: TabViewController(url: URL(string: "https://www.google.com")!))
+                            .tag(4)
+                            .tabItem {
+                                Label("Browser", systemImage: "triangle.fill")
+                            }
+                    }
+                    .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
+                    
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(isBackgroundViewEnabled ? "Focus" : "Fun") {
+                                isBackgroundViewEnabled.toggle()
+                            }
+                            .buttonStyle(SideButtonStyle())
+                            .padding(5)
+                        }
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.top, 20)
+                    
+                }
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
         }
     }
 }
+
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
