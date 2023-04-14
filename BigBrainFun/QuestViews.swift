@@ -243,12 +243,11 @@ struct QuestDetailsView: View {
                 Button(action: {
                     onClose()
                 }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(.red)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
                 }
-                .buttonStyle(BorderlessButtonStyle())
-                .padding(.top, 20)
+                .buttonStyle(CloseButton())
             }
             .padding(.horizontal, 20)
             
@@ -280,12 +279,8 @@ struct QuestDetailsView: View {
                     }
                 }, label: {
                     Text("Upload File")
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 20)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                 })
+                .buttonStyle(SelectFileButton())
                 
                 Spacer()
                 
@@ -293,14 +288,12 @@ struct QuestDetailsView: View {
                     deleteQuest()
                     onClose()
                 }) {
-                    Text("Delete Quest")
-                        .font(.headline)
+                    Image(systemName: "trash")
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.white)
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 20)
-                        .background(Color.red)
-                        .cornerRadius(10)
                 }
+                .buttonStyle(SubtleTrashButton())
+                .padding(8)
             }
             .padding(.bottom, 30)
             
@@ -325,13 +318,8 @@ struct QuestDetailsView: View {
                 analyzing.toggle()
             }) {
                 Text("Send to analysis")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 15)
-                    .padding(.horizontal, 30)
-                    .background(Color.blue)
-                    .cornerRadius(10)
             }
+            .buttonStyle(AnalyzeButton())
             .padding(.bottom, 30)
             
         }

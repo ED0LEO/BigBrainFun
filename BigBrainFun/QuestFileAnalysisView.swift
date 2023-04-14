@@ -117,12 +117,11 @@ struct QuestFileAnalysisView: View {
                 Button(action: {
                     onClose()
                 }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(.red)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
                 }
-                .buttonStyle(BorderlessButtonStyle())
-                .padding(.top, 20)
+                .buttonStyle(CloseButton())
             }
             .padding(.horizontal, 20)
             

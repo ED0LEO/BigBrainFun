@@ -83,3 +83,42 @@ struct AnalyzeButton: ButtonStyle {
             .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
 }
+
+struct CloseButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(8)
+            .background(
+                ZStack {
+                    Circle()
+                        .fill(configuration.isPressed ? Color.gray.opacity(0.5) : Color.gray.opacity(0.2))
+                        .shadow(color: Color.black.opacity(0.3), radius: 3, x: 0, y: 1)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            )
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
+    }
+}
+
+struct SubtleTrashButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(8)
+            .foregroundColor(.gray)
+            .background(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(configuration.isPressed ? Color.gray.opacity(0.5) : Color.gray.opacity(0.2))
+                        .shadow(color: Color.black.opacity(0.3), radius: 3, x: 0, y: 1)
+                    Image(systemName: "trash")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            )
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
+    }
+}
