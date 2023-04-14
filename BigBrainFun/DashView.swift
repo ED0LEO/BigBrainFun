@@ -12,7 +12,7 @@ struct WinView: View {
     @State private var rotation: Double = 0
     @State private var opacity: Double = 0
     @Binding var won: Bool
-    @Binding var winnerVideo: YouTubeVideoPlayerView
+    @Binding var winnerVideo: VideoPlayerView
     
     var body: some View {
         VStack {
@@ -57,16 +57,16 @@ struct WinView: View {
 
 struct PlayView: View{
     @State private var isRolling = false
-    @State private var videos: [YouTubeVideoPlayerView] = [
-        YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8"),
-        YouTubeVideoPlayerView(videoID: "iYjpElPF8K0"),
-        YouTubeVideoPlayerView(videoID: "OYWZF43A5MU")
+    @State private var videos: [VideoPlayerView] = [
+        VideoPlayerView(videoID: "cYcbNdV2bO8"),
+        VideoPlayerView(videoID: "iYjpElPF8K0"),
+        VideoPlayerView(videoID: "OYWZF43A5MU")
     ]
-    @State private var reel1: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
-    @State private var reel2: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "iYjpElPF8K0")
-    @State private var reel3: YouTubeVideoPlayerView = YouTubeVideoPlayerView(videoID: "OYWZF43A5MU")
+    @State private var reel1: VideoPlayerView = VideoPlayerView(videoID: "cYcbNdV2bO8")
+    @State private var reel2: VideoPlayerView = VideoPlayerView(videoID: "iYjpElPF8K0")
+    @State private var reel3: VideoPlayerView = VideoPlayerView(videoID: "OYWZF43A5MU")
     @Binding var won: Bool
-    @Binding var winnerVideo: YouTubeVideoPlayerView
+    @Binding var winnerVideo: VideoPlayerView
     
     var body: some View{
         VStack{
@@ -178,7 +178,7 @@ struct PlayView: View{
 
 struct DashView: View{
     @State private var winningTime = false
-    @State private var winnerVideo = YouTubeVideoPlayerView(videoID: "cYcbNdV2bO8")
+    @State private var winnerVideo = VideoPlayerView(videoID: "cYcbNdV2bO8")
     
     var body: some View{
         VStack{

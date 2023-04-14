@@ -102,7 +102,7 @@ struct ContentView: View {
                             let localWidth = geometry.size.width * 0.83
                             let localHeight = geometry.size.height * 0.83
                             Spacer()
-                            YouTubeVideoPlayerView(videoID: "HoFS5moZgAc")
+                            VideoPlayerView(videoID: "HoFS5moZgAc")
                             
                                 .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
                             Spacer()

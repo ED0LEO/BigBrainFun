@@ -11,7 +11,7 @@
 		0C1573EF29DEFA6B008369C6 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */; };
 		0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */; };
 		0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */; };
-		0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */; };
+		0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
 		0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB64D8C29E463A200866CE3 /* QuestViews.swift */; };
 		0CC17D3A29E73C5E00F10C36 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC17D3929E73C5E00F10C36 /* BrowserView.swift */; };
@@ -50,7 +50,7 @@
 		0C1573EE29DEFA64008369C6 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningBackgroundView.swift; sourceTree = "<group>"; };
 		0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsManager.swift; sourceTree = "<group>"; };
-		0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeVideoPlayerView.swift; sourceTree = "<group>"; };
+		0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CB64D8C29E463A200866CE3 /* QuestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViews.swift; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 				0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
-				0C57166429E1F1A0006BB033 /* YouTubeVideoPlayerView.swift */,
+				0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */,
 				0CE0D04329D9DC8E00ABA468 /* DashView.swift */,
 				0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */,
 				0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */,
@@ -307,7 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C57166529E1F1A0006BB033 /* YouTubeVideoPlayerView.swift in Sources */,
+				0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */,
 				0CFF077A29E6365F00AE8758 /* QuestFileAnalysisView.swift in Sources */,
 				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,
 				0CE0D04429D9DC8E00ABA468 /* DashView.swift in Sources */,
