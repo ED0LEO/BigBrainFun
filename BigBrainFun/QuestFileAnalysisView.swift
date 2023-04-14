@@ -103,7 +103,7 @@ struct QuestFileAnalysisView: View {
             }
         }
     }
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -137,18 +137,14 @@ struct QuestFileAnalysisView: View {
             HStack {
                 Button(action: {
                     let openPanel = NSOpenPanel()
-                    openPanel.allowedFileTypes = ["pdf", "jpg", "png"]
+                    openPanel.allowedFileTypes = ["jpg", "png"]
                     if openPanel.runModal() == NSApplication.ModalResponse.OK {
                         selectedFileURL = openPanel.url
                     }
                 }, label: {
                     Text("Choose File")
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 20)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                 })
+                .buttonStyle(SelectFileButton())
                 
                 if let fileURL = selectedFileURL {
                     Text(fileURL.lastPathComponent)
@@ -157,27 +153,21 @@ struct QuestFileAnalysisView: View {
             }
             .padding(.bottom, 30)
             
-            
-                Spacer()
+            Spacer()
             
             if isAnalyzing {
                 ProgressView("")
                     .progressViewStyle(LinearProgressViewStyle())
                     .accentColor(.purple)
                     .padding(.bottom, 30)
-                   }
+            }
             else {
                 Button(action: {
                     analyzeFile()
                 }) {
                     Text("Analyze File")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 15)
-                        .padding(.horizontal, 30)
-                        .background(Color.green)
-                        .cornerRadius(10)
                 }
+                .buttonStyle(AnalyzeButton())
                 .padding(.bottom, 30)
                 
                 if let result = analysisResult {

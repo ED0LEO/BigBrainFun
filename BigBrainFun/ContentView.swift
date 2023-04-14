@@ -1,32 +1,5 @@
 import SwiftUI
 
-struct GrowingButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(20)
-            .background(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(LinearGradient(gradient: Gradient(colors: [Color.purple, Color.blue]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .shadow(color: Color.purple.opacity(0.5), radius: 10, x: 0, y: 5)
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(Color.white, lineWidth: 3)
-                        .blur(radius: 3)
-                        .offset(x: -2, y: -2)
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(Color.purple, lineWidth: 3)
-                        .blur(radius: 3)
-                        .offset(x: 2, y: 2)
-                }
-            )
-            .foregroundColor(.white)
-            .font(.system(size: 20, weight: .semibold))
-            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
-            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
-    }
-}
-
-
 struct GrowingGradButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
