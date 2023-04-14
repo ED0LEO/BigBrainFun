@@ -117,6 +117,21 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         // Update the text field with the current URL
         foundAddressPanel.updateTextField(with: webView.url)
     }
+    
+    //Store cookies
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if let httpResponse = navigationResponse.response as? HTTPURLResponse, let fields = httpResponse.allHeaderFields as? [String: String], let url = navigationResponse.response.url {
+            let cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: url)
+            let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
+            for cookie in cookies {
+                cookieStore.setCookie(cookie) {
+                        print("Cookie added: \(cookie)")
+                    }
+            }
+        }
+        
+        decisionHandler(.allow)
+    }
 
 }
 

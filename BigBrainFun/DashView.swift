@@ -55,8 +55,6 @@ struct WinView: View {
     }
 }
 
-
-
 struct PlayView: View{
     @State private var isRolling = false
     @State private var videos: [YouTubeVideoPlayerView] = [
@@ -86,7 +84,10 @@ struct PlayView: View{
             }
             .padding(.bottom)
             .padding(.horizontal, 30)
+            Spacer()
             
+            Text("You can win")
+                .fontWeight(.bold)
             
             GeometryReader { geometry in
                 HStack(spacing: 40) {

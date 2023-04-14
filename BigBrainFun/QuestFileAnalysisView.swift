@@ -45,6 +45,7 @@ struct QuestFileAnalysisView: View {
     let quest: Quest
     @Binding var selectedFileURL: URL?
     @State private var analysisResult: String?
+    @State private var isAnalyzing = false
     
     let onClose: () -> Void
     
@@ -54,43 +55,55 @@ struct QuestFileAnalysisView: View {
             return
         }
         
-        do {
-            let imageData = try Data(contentsOf: fileURL)
-            guard let image = NSImage(data: imageData) else {
-                print("Failed to create image from data")
-                return
-            }
-            
-            guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                print("Failed to create CGImage from NSImage")
-                return
-            }
-            
-            let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-            let textRequest = VNRecognizeTextRequest { (request, error) in
-                guard let observations = request.results as? [VNRecognizedTextObservation],
-                      !observations.isEmpty else {
-                    self.analysisResult = "No text detected"
+        // Show loading bar
+        isAnalyzing = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            do {
+                let imageData = try Data(contentsOf: fileURL)
+                guard let image = NSImage(data: imageData) else {
+                    print("Failed to create image from data")
                     return
                 }
                 
-                let text = observations.compactMap { observation in
-                    observation.topCandidates(1).first?.string
-                }.joined(separator: "\n")
-                
-                if text.isEmpty {
-                    self.analysisResult = "No text detected"
-                } else {
-                    self.analysisResult = "Text detected:\n\(text)"
+                guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                    print("Failed to create CGImage from NSImage")
+                    return
                 }
+                
+                let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+                let textRequest = VNRecognizeTextRequest { (request, error) in
+                    defer {
+                        // Hide loading bar
+                        isAnalyzing = false
+                    }
+                    
+                    guard let observations = request.results as? [VNRecognizedTextObservation],
+                          !observations.isEmpty else {
+                        self.analysisResult = "No text detected"
+                        return
+                    }
+                    
+                    let text = observations.compactMap { observation in
+                        observation.topCandidates(1).first?.string
+                    }.joined(separator: "\n")
+                    
+                    if text.isEmpty {
+                        self.analysisResult = "No text detected"
+                    } else {
+                        self.analysisResult = "Text detected:\n\(text)"
+                    }
+                }
+                textRequest.recognitionLevel = .accurate
+                try requestHandler.perform([textRequest])
+            } catch {
+                print("Error analyzing file: \(error.localizedDescription)")
+                // Hide loading bar
+                isAnalyzing = false
             }
-            textRequest.recognitionLevel = .accurate
-            try requestHandler.perform([textRequest])
-        } catch {
-            print("Error analyzing file: \(error.localizedDescription)")
         }
     }
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -144,28 +157,38 @@ struct QuestFileAnalysisView: View {
             }
             .padding(.bottom, 30)
             
-            Spacer()
-            Button(action: {
-                analyzeFile()
-            }) {
-                Text("Analyze File")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 15)
-                    .padding(.horizontal, 30)
-                    .background(Color.green)
-                    .cornerRadius(10)
-            }
-            .padding(.bottom, 30)
             
-            if let result = analysisResult {
-                ScrollView {
-                    Text(result)
-                        .padding()
-                        .foregroundColor(.black)
+                Spacer()
+            
+            if isAnalyzing {
+                ProgressView("")
+                    .progressViewStyle(LinearProgressViewStyle())
+                    .accentColor(.purple)
+                    .padding(.bottom, 30)
+                   }
+            else {
+                Button(action: {
+                    analyzeFile()
+                }) {
+                    Text("Analyze File")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 30)
+                        .background(Color.green)
+                        .cornerRadius(10)
                 }
-                .frame(height: 100)
                 .padding(.bottom, 30)
+                
+                if let result = analysisResult {
+                    ScrollView {
+                        Text(result)
+                            .padding()
+                            .foregroundColor(.black)
+                    }
+                    .frame(height: 100)
+                    .padding(.bottom, 30)
+                }
             }
         }
         .frame(width: 500, height: 500)
