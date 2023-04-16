@@ -41,6 +41,12 @@ struct SpinningBackgroundView: View {
     }
 }
 
+struct FocusBackgroundView: View {
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [Color(red: 0.7, green: 0.5, blue: 0.9), Color(red: 0.4, green: 0.2, blue: 0.6)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            .ignoresSafeArea()
+    }
+}
 
 struct SpinningBackgroundView_Previews: PreviewProvider {
     static var previews: some View {

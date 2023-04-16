@@ -297,6 +297,10 @@ struct QuestDetailsView: View {
                 .buttonStyle(AnalyzeButton())
                 .padding(.bottom, 30)
             }
+            else
+            {
+                Spacer()
+            }
         }
         .frame(width: 500, height: 500)
         .background(Color.white)

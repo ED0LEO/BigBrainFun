@@ -8,45 +8,13 @@
 import SwiftUI
 import Vision
 
-struct ImageView: View {
-    @State private var image: NSImage?
-    let fileURL: URL
-    
-    var body: some View {
-        VStack {
-            if let image = image {
-                Image(nsImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } else {
-                Text("No image available.")
-                    .padding()
-            }
-        }
-        .onAppear {
-            loadImage()
-        }
-    }
-    
-    func loadImage() {
-        DispatchQueue.global(qos: .background).async {
-            if let data = try? Data(contentsOf: fileURL),
-               let nsImage = NSImage(data: data) {
-                DispatchQueue.main.async {
-                    self.image = nsImage
-                }
-            }
-        }
-    }
-}
-
-
 struct QuestFileAnalysisView: View {
     @State var quest: Quest
     @EnvironmentObject var questsManager: QuestsManager
     @State var selectedFileURL: URL?
     @State private var analysisResult: String?
     @State private var isAnalyzing = false
+    @State private var loadedImage: NSImage?
     
     let onClose: () -> Void
     
