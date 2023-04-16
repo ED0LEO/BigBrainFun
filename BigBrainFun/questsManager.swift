@@ -191,7 +191,10 @@ class QuestsManager: ObservableObject {
                 }
 
                 let isCompleted = isCompletedValue != nil
-                let documentURL = documentURLValue != nil ? URL(string: String(cString: documentURLValue)) : nil
+                
+                let documentURLString = String(cString: documentURLValue)
+                let documentURL = !documentURLString.isEmpty ? URL(string: documentURLString) : nil
+                
                 let quest = Quest(id: String(cString: id),
                                   title: String(cString: title),
                                   isCompleted: isCompleted,
@@ -237,9 +240,9 @@ class QuestsManager: ObservableObject {
             if sqlite3_step(queryStatement) == SQLITE_ROW {
                 let title = String(cString: sqlite3_column_text(queryStatement, 1))
                 let isCompletedValue = sqlite3_column_int(queryStatement, 2)
-                let category = Category(rawValue: String(cString: sqlite3_column_text(queryStatement, 3))) ?? .study
-                let documentURLString = String(cString: sqlite3_column_text(queryStatement, 4))
+                let documentURLString = String(cString: sqlite3_column_text(queryStatement, 3))
                 let documentURL = documentURLString.isEmpty ? nil : URL(string: documentURLString)
+                let category = Category(rawValue: String(cString: sqlite3_column_text(queryStatement, 4))) ?? .study
                 
                 quest = Quest(id: id, title: title, isCompleted: isCompletedValue != 0, documentURL: documentURL, category: category)
             }
@@ -250,7 +253,7 @@ class QuestsManager: ObservableObject {
         sqlite3_finalize(queryStatement)
         return quest
     }
-    
+
     deinit {
         closeDatabase()
         print("Database is closed")

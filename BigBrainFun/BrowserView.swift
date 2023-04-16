@@ -132,7 +132,6 @@ class TabViewController: NSViewController, WKNavigationDelegate {
         
         decisionHandler(.allow)
     }
-
 }
 
 struct BrowserView: NSViewRepresentable {

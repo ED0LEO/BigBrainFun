@@ -208,7 +208,6 @@ struct QuestsView: View {
 
 struct QuestDetailsView: View {
     @EnvironmentObject var questsManager: QuestsManager
-    @Binding var fileURL: URL?
     @State var quest: Quest
     @Binding var analyzing: Bool
     
@@ -217,14 +216,6 @@ struct QuestDetailsView: View {
     private func deleteQuest() {
         questsManager.deleteQuest(quest: quest)
         print("deleteQuest: tit = " + quest.title + ", cat = " + quest.category.rawValue + ", id = " + quest.id)
-        
-        print("ALL:")
-        questsManager.printAllQuests()
-    }
-    
-    private func toggleCompletion() {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
-        quest.isCompleted.toggle() // update the local quest state variable as well
         
         print("ALL:")
         questsManager.printAllQuests()
@@ -256,31 +247,21 @@ struct QuestDetailsView: View {
                 .padding(.bottom)
                 .foregroundColor(.black)
             
-            Text("Quest details go here...")
-                .padding()
-                .foregroundColor(.black)
             
             HStack {
-                Button(action: {
-                    toggleCompletion()
-                }, label: {
-                    Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
-                        .font(.system(size: 24))
-                        .foregroundColor(.green)
-                })
+                Image(systemName: quest.isCompleted ? "checkmark.seal.fill" : "checkmark.seal")
+                    .font(.system(size: 32))
+                    .foregroundColor(quest.isCompleted ? Color.green : Color.gray)
+                    .frame(width: 50, height: 50)
+                    .background(quest.isCompleted ? Color.green.opacity(0.2) : Color.gray.opacity(0.2))
+                    .cornerRadius(20)
+                    .padding(.leading, 10)
                 
                 Spacer()
                 
-                Button(action: {
-                    let openPanel = NSOpenPanel()
-                    openPanel.allowedFileTypes = ["pdf", "jpg", "png"]
-                    if openPanel.runModal() == NSApplication.ModalResponse.OK {
-                        fileURL = openPanel.url
-                    }
-                }, label: {
-                    Text("Upload File")
-                })
-                .buttonStyle(SelectFileButton())
+                Text("Quest details go here...")
+                    .padding()
+                    .foregroundColor(.black)
                 
                 Spacer()
                 
@@ -297,31 +278,25 @@ struct QuestDetailsView: View {
             }
             .padding(.bottom, 30)
             
-            Button(action: {
-                toggleCompletion()
-            }) {
-                Text(quest.isCompleted ? "Mark as Incomplete" : "Mark as Completed")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 15)
-                    .padding(.horizontal, 30)
-                    .background(Color.green)
-                    .cornerRadius(10)
-            }
-            .padding(.bottom, 30)
-            
             Spacer()
-            if let fileURL = fileURL {
-                ImageView(fileURL: fileURL)
-            }
-            Button(action: {
-                analyzing.toggle()
-            }) {
-                Text("Send to analysis")
-            }
-            .buttonStyle(AnalyzeButton())
-            .padding(.bottom, 30)
             
+            if let docURL = quest.documentURL, let imageData = try? Data(contentsOf: docURL), let image = NSImage(data: imageData) {
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+            }
+            
+            if !quest.isCompleted{
+                Button(action: {
+                    analyzing.toggle()
+                }) {
+                    Text("Send to analysis")
+                }
+                .buttonStyle(AnalyzeButton())
+                .padding(.bottom, 30)
+            }
         }
         .frame(width: 500, height: 500)
         .background(Color.white)

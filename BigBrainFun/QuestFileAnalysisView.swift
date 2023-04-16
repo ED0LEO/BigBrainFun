@@ -42,66 +42,83 @@ struct ImageView: View {
 
 
 struct QuestFileAnalysisView: View {
-    let quest: Quest
-    @Binding var selectedFileURL: URL?
+    @State var quest: Quest
+    @EnvironmentObject var questsManager: QuestsManager
+    @State var selectedFileURL: URL?
     @State private var analysisResult: String?
     @State private var isAnalyzing = false
     
     let onClose: () -> Void
     
+    private func updateQuestDocumentURL(newURL: URL) {
+        quest.documentURL = newURL
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: quest.isCompleted, documentURL: newURL)
+    }
+    
+    private func toggleCompletion() {
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
+        quest.isCompleted.toggle() // update the local quest state variable as well
+    }
+    
     private func analyzeFile() {
-        guard let fileURL = selectedFileURL else {
+        
+        if quest.documentURL == nil{
             print("No file selected")
             return
         }
         
-        // Show loading bar
-        isAnalyzing = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            do {
-                let imageData = try Data(contentsOf: fileURL)
-                guard let image = NSImage(data: imageData) else {
-                    print("Failed to create image from data")
-                    return
-                }
-                
-                guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                    print("Failed to create CGImage from NSImage")
-                    return
-                }
-                
-                let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-                let textRequest = VNRecognizeTextRequest { (request, error) in
-                    defer {
-                        // Hide loading bar
-                        isAnalyzing = false
-                    }
-                    
-                    guard let observations = request.results as? [VNRecognizedTextObservation],
-                          !observations.isEmpty else {
-                        self.analysisResult = "No text detected"
+        if let fileURL = quest.documentURL{
+            
+            // Show loading bar
+            isAnalyzing = true
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                do {
+                    let imageData = try Data(contentsOf: fileURL)
+                    guard let image = NSImage(data: imageData) else {
+                        print("Failed to create image from data")
                         return
                     }
                     
-                    let text = observations.compactMap { observation in
-                        observation.topCandidates(1).first?.string
-                    }.joined(separator: "\n")
-                    
-                    if text.isEmpty {
-                        self.analysisResult = "No text detected"
-                    } else {
-                        self.analysisResult = "Text detected:\n\(text)"
+                    guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                        print("Failed to create CGImage from NSImage")
+                        return
                     }
+                    
+                    let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+                    let textRequest = VNRecognizeTextRequest { (request, error) in
+                        defer {
+                            // Hide loading bar
+                            isAnalyzing = false
+                        }
+                        
+                        guard let observations = request.results as? [VNRecognizedTextObservation],
+                              !observations.isEmpty else {
+                            self.analysisResult = "No text detected"
+                            return
+                        }
+                        
+                        let text = observations.compactMap { observation in
+                            observation.topCandidates(1).first?.string
+                        }.joined(separator: "\n")
+                        
+                        if text.isEmpty {
+                            self.analysisResult = "No text detected"
+                        } else {
+                            self.analysisResult = "Text detected:\n\(text)"
+                            toggleCompletion()
+                        }
+                    }
+                    textRequest.recognitionLevel = .accurate
+                    try requestHandler.perform([textRequest])
+                } catch {
+                    print("Error analyzing file: \(error.localizedDescription)")
+                    // Hide loading bar
+                    isAnalyzing = false
                 }
-                textRequest.recognitionLevel = .accurate
-                try requestHandler.perform([textRequest])
-            } catch {
-                print("Error analyzing file: \(error.localizedDescription)")
-                // Hide loading bar
-                isAnalyzing = false
             }
         }
+        
     }
     
     var body: some View {
@@ -125,8 +142,12 @@ struct QuestFileAnalysisView: View {
             }
             .padding(.horizontal, 20)
             
-            if let fileURL = selectedFileURL {
-                ImageView(fileURL: fileURL)
+            if let docURL = quest.documentURL, let imageData = try? Data(contentsOf: docURL), let image = NSImage(data: imageData) {
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
             }
             
             Text("Select a file to analyze:")
@@ -139,6 +160,9 @@ struct QuestFileAnalysisView: View {
                     openPanel.allowedFileTypes = ["jpg", "png"]
                     if openPanel.runModal() == NSApplication.ModalResponse.OK {
                         selectedFileURL = openPanel.url
+                        if let selectedURL = selectedFileURL{
+                            updateQuestDocumentURL(newURL: selectedURL)
+                        }
                     }
                 }, label: {
                     Text("Choose File")
