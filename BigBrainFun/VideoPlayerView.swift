@@ -13,6 +13,7 @@ struct VideoPlayerView: View {
 
     var body: some View {
         WebView(url: URL(string: "https://inv.odyssey346.dev/embed/\(videoID)")!)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
@@ -28,7 +29,17 @@ struct WebView: NSViewRepresentable {
     func updateNSView(_ nsView: WKWebView, context: Context) {
         nsView.load(URLRequest(url: url))
     }
+    
+    // Add this method to customize the shape of the view
+    func makeNSView(context: Context) -> NSView {
+        let webView = WKWebView()
+        webView.load(URLRequest(url: url))
+        webView.wantsLayer = true
+        webView.layer?.cornerRadius = 10
+        return webView
+    }
 }
+
 
 struct VideoPlayerView_Previews: PreviewProvider {
     static var previews: some View {
