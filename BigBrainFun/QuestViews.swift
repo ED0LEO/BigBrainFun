@@ -75,37 +75,41 @@ struct QuestsView: View {
                 ScrollView {
                     ForEach(sortedQuests.filter { $0.category == selectedCategory }) { oldQuest in
                         let quest = returnQuestbyId(id: oldQuest.id)
-                        HStack {
-                            Button(action: {
-                                onQuestSelected?(quest)
-                            }) {
+                        
+                        Button(action: {
+                            onQuestSelected?(quest)
+                        }) {
+                            HStack {
                                 Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
                                     .font(.system(size: 24))
                                     .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                
+                                Text(quest.title)
+                                    .font(.title3)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .bold()
+                                
+                                Text(quest.category.rawValue)
+                                    .font(.headline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5)
+                                    .background(Color.pink)
+                                    .cornerRadius(8)
+                                
+                                Spacer()
                             }
-                            .buttonStyle(BorderlessButtonStyle())
-                            .padding(.trailing, 8)
-                            
-                            Text(quest.title)
-                                .font(.title3)
-                                .foregroundColor(.white)
-                                .padding()
-                                .bold()
-                            
-                            Text(quest.category.rawValue)
-                                .font(.headline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.white.opacity(0.8))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(Color.pink)
-                                .cornerRadius(8)
-                            
-                            Spacer()
+                            .background(Color.white.opacity(0.2))
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                         }
-                        .background(Color.white.opacity(0.2))
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                        .buttonStyle(BorderlessButtonStyle())
+                        .padding(.trailing, 8)
+                        
+                        
                     }
                 }
                 

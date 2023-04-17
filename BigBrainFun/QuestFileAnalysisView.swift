@@ -173,8 +173,6 @@ struct QuestFileAnalysisView: View {
                         }
                         .frame(height: 100)
                         .padding(.bottom, 30)
-                        
-                        
                     }
                 }
             }

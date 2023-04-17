@@ -83,29 +83,3 @@ struct QuestCreatedView: View {
         .alignmentGuide(.top) { $0[.bottom] } // align the view to the top of the screen
     }
 }
-
-
-struct SparkView: View {
-    @State private var showSpark = false
-    
-    var body: some View {
-        ZStack {
-            if showSpark {
-                Circle()
-                    .fill(Color.yellow)
-                    .frame(width: 10, height: 10)
-                    .scaleEffect(0.01)
-                    .opacity(1)
-                    .animation(.easeOut(duration: 0.3))
-                    .onAppear {
-                        showSpark = true
-                    }
-                    .onDisappear {
-                        showSpark = false
-                    }
-            }
-        }
-        .frame(width: 50, height: 50)
-        .background(Color.clear)
-    }
-}
