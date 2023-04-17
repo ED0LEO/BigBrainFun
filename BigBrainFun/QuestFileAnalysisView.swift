@@ -9,6 +9,7 @@ import SwiftUI
 import Vision
 
 struct QuestFileAnalysisView: View {
+    @EnvironmentObject var points: Points
     @State var quest: Quest
     @EnvironmentObject var questsManager: QuestsManager
     @State var selectedFileURL: URL?
@@ -26,6 +27,7 @@ struct QuestFileAnalysisView: View {
     private func toggleCompletion() {
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
         quest.isCompleted.toggle() // update the local quest state variable as well
+        points.setPoints(newNum: points.getPoints() + 10)
     }
     
     private func analyzeFile() {
@@ -126,6 +128,7 @@ struct QuestFileAnalysisView: View {
                 Button(action: {
                     let openPanel = NSOpenPanel()
                     openPanel.allowedFileTypes = ["jpg", "png"]
+                    
                     if openPanel.runModal() == NSApplication.ModalResponse.OK {
                         selectedFileURL = openPanel.url
                         if let selectedURL = selectedFileURL{

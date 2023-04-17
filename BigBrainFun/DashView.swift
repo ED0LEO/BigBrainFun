@@ -56,6 +56,7 @@ struct WinView: View {
 }
 
 struct PlayView: View{
+    @EnvironmentObject var points: Points
     @State private var isRolling = false
     @State private var videos: [VideoPlayerView] = [
         VideoPlayerView(videoID: "cYcbNdV2bO8"),
@@ -70,22 +71,20 @@ struct PlayView: View{
     
     var body: some View{
         VStack{
-            HStack {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-                    .font(.system(size: 24))
-                Text("Dash")
-                    .titleStyle()
-                    .fontWeight(.bold)
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-                    .font(.system(size: 24))
-                
-            }
-            .padding(.bottom)
-            .padding(.horizontal, 30)
             Spacer()
             
+            Text("🎉 Points: \(points.getPoints())")
+                .titleStyle()
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 30)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.white.opacity(0.9))
+                        .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                )
+
             Text("You can win")
                 .fontWeight(.bold)
             
@@ -136,42 +135,46 @@ struct PlayView: View{
     
     
     func spinReels() {
-        isRolling = true
-        let newReel1 = videos.randomElement()!
-        let newReel2 = videos.randomElement()!
-        let newReel3 = videos.randomElement()!
-        
-        let delay1 = Double.random(in: 0.5...1.5)
-        let delay2 = Double.random(in: 0.5...1.5)
-        let delay3 = Double.random(in: 0.5...1.5)
-        let duration1 = Double.random(in: 0.8...1.2)
-        let duration2 = Double.random(in: 0.8...1.2)
-        let duration3 = Double.random(in: 0.8...1.2)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay1) {
-            withAnimation(.easeInOut(duration: duration1)) {
-                reel1 = newReel1
+        if points.getPoints() >= 3 {
+            points.setPoints(newNum: points.getPoints() - 3)
+            isRolling = true
+            let newReel1 = videos.randomElement()!
+            let newReel2 = videos.randomElement()!
+            let newReel3 = videos.randomElement()!
+            
+            let delay1 = Double.random(in: 0.5...1.5)
+            let delay2 = Double.random(in: 0.5...1.5)
+            let delay3 = Double.random(in: 0.5...1.5)
+            let duration1 = Double.random(in: 0.8...1.2)
+            let duration2 = Double.random(in: 0.8...1.2)
+            let duration3 = Double.random(in: 0.8...1.2)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay1) {
+                withAnimation(.easeInOut(duration: duration1)) {
+                    reel1 = newReel1
+                }
             }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay2) {
-            withAnimation(.easeInOut(duration: duration2)) {
-                reel2 = newReel2
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay2) {
+                withAnimation(.easeInOut(duration: duration2)) {
+                    reel2 = newReel2
+                }
             }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay3) {
-            withAnimation(.easeInOut(duration: duration3)) {
-                reel3 = newReel3
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay3) {
+                withAnimation(.easeInOut(duration: duration3)) {
+                    reel3 = newReel3
+                }
             }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-            if reel1.videoID == reel2.videoID && reel2.videoID == reel3.videoID {
-                won = true
-                winnerVideo = reel1
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+                if reel1.videoID == reel2.videoID && reel2.videoID == reel3.videoID {
+                    won = true
+                    winnerVideo = reel1
+                    points.setPoints(newNum: points.getPoints() + 10)
+                }
+                isRolling = false
             }
-            isRolling = false
         }
     }
 }

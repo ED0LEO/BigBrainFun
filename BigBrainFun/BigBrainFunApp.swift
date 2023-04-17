@@ -7,24 +7,19 @@
 
 import SwiftUI
 
-struct SideButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding(20)
-            .background(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(LinearGradient(gradient: Gradient(colors: [Color.purple, Color.blue]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .shadow(color: Color.purple.opacity(0.5), radius: 10, x: 0, y: 5)
-                }
-            )
-            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
-            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
-            .rotationEffect(Angle(degrees: configuration.isPressed ? 10 : 0))
-            .offset(x: configuration.isPressed ? 30 : 0, y: configuration.isPressed ? 30 : 0)
-            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
+class Points: ObservableObject {
+    private var points: Int
+    
+    init() {
+        points = 0
+    }
+    
+    func setPoints(newNum: Int) {
+        points = newNum
+    }
+    
+    func getPoints() -> Int {
+        return points
     }
 }
 
@@ -32,13 +27,15 @@ struct SideButtonStyle: ButtonStyle {
 struct BigBrainFunApp: App {
     @State private var showCalendar = false
     let questsManager = QuestsManager()
+    let points =  Points()
     
     var body: some Scene {
         WindowGroup {
             VStack {
                 ContentView()
+                
                 Button(showCalendar ? "Hide Calendar" : "Show Calendar") {
-                    showCalendar.toggle() 
+                    showCalendar.toggle()
                 }
                 .buttonStyle(SideButtonStyle())
                 .padding(5)
@@ -48,6 +45,7 @@ struct BigBrainFunApp: App {
                 }
             }
             .environmentObject(questsManager)
+            .environmentObject(points)
         }
     }
 }
