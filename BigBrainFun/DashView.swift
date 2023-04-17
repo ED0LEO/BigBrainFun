@@ -7,6 +7,45 @@
 
 import SwiftUI
 
+struct CelebrationView: View {
+    let points: Int
+    @State private var showCelebration = false
+    
+    var body: some View {
+        VStack {
+            Spacer() // Add a spacer to push the view to the top
+            
+            if showCelebration {
+                Text("+\(points) points")
+                    .font(.title)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.green)
+                            .shadow(radius: 10)
+                    )
+                    .transition(.move(edge: .top))
+                    .animation(.easeOut(duration: 0.5))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            withAnimation(.easeOut(duration: 0)) {
+                                showCelebration = false
+                            }
+                        }
+                    }
+            }
+        }
+        .frame(width: 200, height: 100)
+        .onAppear {
+            showCelebration = true
+        }
+        .zIndex(1)
+        .overlay(Color.black.opacity(0.001)) // transparent overlay to capture clicks and events
+        .alignmentGuide(.top) { $0[.bottom] } // align the view to the top of the screen
+    }
+}
+
 struct WinView: View {
     @State private var scale: CGFloat = 0.5
     @State private var rotation: Double = 0
@@ -15,43 +54,47 @@ struct WinView: View {
     @Binding var winnerVideo: VideoPlayerView
     
     var body: some View {
-        VStack {
-            Text("Congratulations, you've won!")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.top, 50)
-                .foregroundColor(.white)
-            
-            Spacer()
-            
-            winnerVideo
-                .rotationEffect(.degrees(rotation))
-                .scaleEffect(scale)
-                .opacity(opacity)
-                .animation(Animation.easeOut(duration: 1.0))
-                .onAppear {
-                    withAnimation(Animation.easeOut(duration: 0.5)) {
-                        scale = 1.0
-                        rotation = 360
-                        opacity = 1.0
+        ZStack { // add a ZStack to overlay the CelebrationView on top of other views
+            VStack {
+                Text("Congratulations, you've won!")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.top, 50)
+                    .foregroundColor(.white)
+                
+                winnerVideo
+                    .rotationEffect(.degrees(rotation))
+                    .scaleEffect(scale)
+                    .opacity(opacity)
+                    .animation(Animation.easeOut(duration: 1.0))
+                    .onAppear {
+                        withAnimation(Animation.easeOut(duration: 0.5)) {
+                            scale = 1.0
+                            rotation = 360
+                            opacity = 1.0
+                        }
                     }
+                
+                Spacer()
+                
+                Button("Go back") {
+                    won.toggle()
                 }
-            
-            Spacer()
-            
-            Button("Go back") {
-                won.toggle()
+                .buttonStyle(GrowingButton())
+                
+                Spacer()
             }
-            .buttonStyle(GrowingButton())
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .edgesIgnoringSafeArea(.all)
             
-            
-            Spacer()
+            CelebrationView(points: 5)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.clear)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-        )
-        .edgesIgnoringSafeArea(.all)
+
     }
 }
 
@@ -73,7 +116,7 @@ struct PlayView: View{
         VStack{
             Spacer()
             
-            Text("🎉 Points: \(points.getPoints())")
+            Text("🎉 Points: \(points.points)")
                 .titleStyle()
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -84,9 +127,9 @@ struct PlayView: View{
                         .fill(Color.white.opacity(0.9))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 )
-
-            Text("You can win")
-                .fontWeight(.bold)
+                .onReceive(points.$points) { _ in
+                    // Update the view whenever `points` changes
+                }
             
             GeometryReader { geometry in
                 HStack(spacing: 40) {
@@ -125,9 +168,12 @@ struct PlayView: View{
                 .buttonStyle(GrowingGradButton())
                 .padding(.vertical, 20)
                 .padding(.horizontal, 80)
-                .disabled(isRolling)
-                .opacity(isRolling ? 0.5 : 1)
+                .disabled(isRolling || points.points < 3)
+                .opacity((isRolling || points.points < 3) ? 0.5 : 1)
                 .animation(.easeInOut(duration: 0.3))
+            
+            Text("3 pts")
+                .fontWeight(.bold)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
@@ -135,8 +181,8 @@ struct PlayView: View{
     
     
     func spinReels() {
-        if points.getPoints() >= 3 {
-            points.setPoints(newNum: points.getPoints() - 3)
+        if points.points >= 3 {
+            points.points = points.points - 3
             isRolling = true
             let newReel1 = videos.randomElement()!
             let newReel2 = videos.randomElement()!
@@ -171,7 +217,7 @@ struct PlayView: View{
                 if reel1.videoID == reel2.videoID && reel2.videoID == reel3.videoID {
                     won = true
                     winnerVideo = reel1
-                    points.setPoints(newNum: points.getPoints() + 10)
+                    points.points = points.points + 5
                 }
                 isRolling = false
             }

@@ -8,18 +8,10 @@
 import SwiftUI
 
 class Points: ObservableObject {
-    private var points: Int
+    @Published var points: Int
     
     init() {
-        points = 0
-    }
-    
-    func setPoints(newNum: Int) {
-        points = newNum
-    }
-    
-    func getPoints() -> Int {
-        return points
+        points = 30
     }
 }
 

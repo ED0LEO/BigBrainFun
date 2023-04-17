@@ -27,7 +27,7 @@ struct QuestFileAnalysisView: View {
     private func toggleCompletion() {
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
         quest.isCompleted.toggle() // update the local quest state variable as well
-        points.setPoints(newNum: points.getPoints() + 10)
+        points.points = points.points + 10
     }
     
     private func analyzeFile() {
@@ -92,92 +92,103 @@ struct QuestFileAnalysisView: View {
     }
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Analyze File for Quest: \(quest.title)")
-                    .font(.title)
-                    .padding()
+        ZStack {
+            VStack {
+                HStack {
+                    Text("Analyze File for Quest: \(quest.title)")
+                        .font(.title)
+                        .padding()
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        onClose()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.white)
+                    }
+                    .buttonStyle(CloseButton())
+                }
+                .padding(.horizontal, 20)
+                
+                if let docURL = quest.documentURL, let imageData = try? Data(contentsOf: docURL), let image = NSImage(data: imageData) {
+                    Image(nsImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                }
+                
+                Text("Select a file to analyze:")
+                    .padding(.bottom)
                     .foregroundColor(.black)
+                
+                HStack {
+                    Button(action: {
+                        let openPanel = NSOpenPanel()
+                        openPanel.allowedFileTypes = ["jpg", "png"]
+                        
+                        if openPanel.runModal() == NSApplication.ModalResponse.OK {
+                            selectedFileURL = openPanel.url
+                            if let selectedURL = selectedFileURL{
+                                updateQuestDocumentURL(newURL: selectedURL)
+                            }
+                        }
+                    }, label: {
+                        Text("Choose File")
+                    })
+                    .buttonStyle(SelectFileButton())
+                    
+                    if let fileURL = selectedFileURL {
+                        Text(fileURL.lastPathComponent)
+                            .foregroundColor(.black)
+                    }
+                }
+                .padding(.bottom, 30)
                 
                 Spacer()
                 
-                Button(action: {
-                    onClose()
-                }) {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.white)
+                if isAnalyzing {
+                    ProgressView("")
+                        .progressViewStyle(LinearProgressViewStyle())
+                        .accentColor(.purple)
+                        .padding(.bottom, 30)
                 }
-                .buttonStyle(CloseButton())
-            }
-            .padding(.horizontal, 20)
-            
-            if let docURL = quest.documentURL, let imageData = try? Data(contentsOf: docURL), let image = NSImage(data: imageData) {
-                Image(nsImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-            }
-            
-            Text("Select a file to analyze:")
-                .padding(.bottom)
-                .foregroundColor(.black)
-            
-            HStack {
-                Button(action: {
-                    let openPanel = NSOpenPanel()
-                    openPanel.allowedFileTypes = ["jpg", "png"]
+                else {
+                    Button(action: {
+                        analyzeFile()
+                    }) {
+                        Text("Analyze File")
+                    }
+                    .buttonStyle(AnalyzeButton())
+                    .padding(.bottom, 30)
                     
-                    if openPanel.runModal() == NSApplication.ModalResponse.OK {
-                        selectedFileURL = openPanel.url
-                        if let selectedURL = selectedFileURL{
-                            updateQuestDocumentURL(newURL: selectedURL)
+                    if let result = analysisResult {
+                        ScrollView {
+                            Text(result)
+                                .padding()
+                                .foregroundColor(.black)
                         }
+                        .frame(height: 100)
+                        .padding(.bottom, 30)
+                        
+                        
                     }
-                }, label: {
-                    Text("Choose File")
-                })
-                .buttonStyle(SelectFileButton())
-                
-                if let fileURL = selectedFileURL {
-                    Text(fileURL.lastPathComponent)
-                        .foregroundColor(.black)
                 }
             }
-            .padding(.bottom, 30)
-            
-            Spacer()
-            
-            if isAnalyzing {
-                ProgressView("")
-                    .progressViewStyle(LinearProgressViewStyle())
-                    .accentColor(.purple)
-                    .padding(.bottom, 30)
-            }
-            else {
-                Button(action: {
-                    analyzeFile()
-                }) {
-                    Text("Analyze File")
-                }
-                .buttonStyle(AnalyzeButton())
-                .padding(.bottom, 30)
+            .frame(width: 500, height: 500)
+            .background(Color.white)
+            .cornerRadius(20)
+            .shadow(radius: 10)
+         
+            if quest.isCompleted{
                 
-                if let result = analysisResult {
-                    ScrollView {
-                        Text(result)
-                            .padding()
-                            .foregroundColor(.black)
-                    }
-                    .frame(height: 100)
-                    .padding(.bottom, 30)
-                }
+                CelebrationView(points: 10)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.clear)
             }
         }
-        .frame(width: 500, height: 500)
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(radius: 10)
     }
 }
