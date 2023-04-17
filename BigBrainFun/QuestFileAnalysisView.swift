@@ -184,7 +184,6 @@ struct QuestFileAnalysisView: View {
             .shadow(radius: 10)
          
             if quest.isCompleted{
-                
                 CelebrationView(points: 10)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.clear)

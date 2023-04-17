@@ -84,59 +84,28 @@ struct QuestCreatedView: View {
     }
 }
 
-struct QuestCompletionView: View {
-    @State private var showFireworks = false
-    @State private var showStars = false
+
+struct SparkView: View {
+    @State private var showSpark = false
     
     var body: some View {
         ZStack {
-            if showFireworks {
-                Image(systemName: "sparkles")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.orange)
-                    .frame(width: 150, height: 150)
-                    .transition(.scale)
-                    .animation(.easeOut(duration: 1))
-            }
-            
-            if showStars {
-                HStack {
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.yellow)
-                        .frame(width: 50, height: 50)
-                        .transition(.scale)
-                        .animation(.easeOut(duration: 1))
-                    
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.yellow)
-                        .frame(width: 50, height: 50)
-                        .transition(.scale)
-                        .animation(.easeOut(duration: 1).delay(0.2))
-                    
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.yellow)
-                        .frame(width: 50, height: 50)
-                        .transition(.scale)
-                        .animation(.easeOut(duration: 1).delay(0.4))
-                }
+            if showSpark {
+                Circle()
+                    .fill(Color.yellow)
+                    .frame(width: 10, height: 10)
+                    .scaleEffect(0.01)
+                    .opacity(1)
+                    .animation(.easeOut(duration: 0.3))
+                    .onAppear {
+                        showSpark = true
+                    }
+                    .onDisappear {
+                        showSpark = false
+                    }
             }
         }
-        .onAppear {
-            showFireworks = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                showStars = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) {
-                showFireworks = false
-                showStars = false
-            }
-        }
+        .frame(width: 50, height: 50)
+        .background(Color.clear)
     }
 }
