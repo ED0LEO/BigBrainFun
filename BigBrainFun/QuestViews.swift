@@ -49,6 +49,7 @@ struct QuestsView: View {
     @State private var isPopoverPresented = false
     @State private var selectedCategory: Category = .study
     @State private var addCategory: Category = .study
+    @State private var showQuestCreatedView = false
     
     var onQuestSelected: ((Quest) -> Void)?
     @FocusState private var focused: Bool
@@ -164,6 +165,20 @@ struct QuestsView: View {
             .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
                 PopoverView(isPresented: $isPopoverPresented)
             }
+            
+            if showQuestCreatedView {
+                QuestCreatedView()
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeOut(duration: 0.5))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                // set the state variable back to false to hide the view after a delay
+                                showQuestCreatedView = false
+                            }
+                        }
+                    }
+            }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
@@ -200,6 +215,7 @@ struct QuestsView: View {
             let q = Quest(id: UUID().uuidString, title: title, category: category)
             questsManager.insertQuest(quest: q)
             print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
+            showQuestCreatedView = true
         }
         newQuest = ""
     }
