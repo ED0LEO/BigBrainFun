@@ -27,7 +27,7 @@ struct QuestFileAnalysisView: View {
     private func toggleCompletion() {
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
         quest.isCompleted.toggle() // update the local quest state variable as well
-        points.points = points.points + 10
+        points.points = points.points + 100
     }
     
     private func analyzeFile() {

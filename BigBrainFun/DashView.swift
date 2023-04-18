@@ -13,49 +13,58 @@ struct WinView: View {
     @State private var opacity: Double = 0
     @Binding var won: Bool
     @Binding var winnerVideo: VideoPlayerView
+    @State private var notificationIsShown = true
     
     var body: some View {
-        ZStack { // add a ZStack to overlay the CelebrationView on top of other views
-            VStack {
-                Text("Congratulations, you've won!")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.top, 50)
-                    .foregroundColor(.white)
-                
-                winnerVideo
-                    .rotationEffect(.degrees(rotation))
-                    .scaleEffect(scale)
-                    .opacity(opacity)
-                    .animation(Animation.easeOut(duration: 1.0))
-                    .onAppear {
-                        withAnimation(Animation.easeOut(duration: 0.5)) {
-                            scale = 1.0
-                            rotation = 360
-                            opacity = 1.0
-                        }
+        GeometryReader { geometry in
+            ZStack { // add a ZStack to overlay the CelebrationView on top of other views
+                VStack {
+                    Spacer()
+                    ZStack{
+                        let localWidth = geometry.size.width * 0.8
+                        let localHeight = geometry.size.height * 0.8
+                        winnerVideo
+                            .rotationEffect(.degrees(rotation))
+                            .scaleEffect(scale)
+                            .opacity(opacity)
+                            .animation(Animation.easeOut(duration: 1.0))
+                            .onAppear {
+                                withAnimation(Animation.easeOut(duration: 0.5)) {
+                                    scale = 1.0
+                                    rotation = 360
+                                    opacity = 1.0
+                                }
+                            }
+                        
+                            .frame(width: min(localWidth, geometry.size.height * 1.77), height: min(localHeight, geometry.size.width / 1.77))
                     }
-                
-                Spacer()
-                
-                Button("Go back") {
-                    won.toggle()
+                    Spacer()
+                    
+                    Button("Go back") {
+                        won.toggle()
+                    }
+                    .buttonStyle(GrowingButton())
+                    
+                    Spacer()
                 }
-                .buttonStyle(GrowingButton())
-                
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                LinearGradient(gradient: Gradient(colors: [Color(red: 0.98, green: 0.71, blue: 0.21), Color(red: 0.91, green: 0.20, blue: 0.62)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-            )
-            .edgesIgnoringSafeArea(.all)
-            
-            CelebrationView(points: 5)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.clear)
+                .edgesIgnoringSafeArea(.all)
+                
+                if notificationIsShown == true {
+                    CelebrationView(points: 5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.clear)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                withAnimation(.easeOut(duration: 0.5)) {
+                                    // set the state variable back to false to hide the view after a delay
+                                    notificationIsShown = false
+                                }
+                            }
+                        }
+                }
+            }
         }
-
     }
 }
 

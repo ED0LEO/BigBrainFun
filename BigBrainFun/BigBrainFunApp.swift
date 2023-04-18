@@ -47,6 +47,6 @@ struct BigBrainFunApp: App {
             .environmentObject(questsManager)
             .environmentObject(points)
         }
+        .windowStyle(HiddenTitleBarWindowStyle())
     }
 }
-
