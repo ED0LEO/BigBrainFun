@@ -49,7 +49,7 @@ struct QuestsView: View {
     @State private var isPopoverPresented = false
     @State private var selectedCategory: Category = .study
     @State private var addCategory: Category = .study
-    @State private var showQuestCreatedView = false
+    @State private var createNotification = false
     
     var onQuestSelected: ((Quest) -> Void)?
     @FocusState private var focused: Bool
@@ -170,7 +170,7 @@ struct QuestsView: View {
                 PopoverView(isPresented: $isPopoverPresented)
             }
             
-            if showQuestCreatedView {
+            if createNotification == true {
                 QuestCreatedView()
                     .transition(.move(edge: .bottom))
                     .animation(.easeOut(duration: 0.5))
@@ -178,7 +178,7 @@ struct QuestsView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             withAnimation(.easeOut(duration: 0.5)) {
                                 // set the state variable back to false to hide the view after a delay
-                                showQuestCreatedView = false
+                                createNotification = false
                             }
                         }
                     }
@@ -206,20 +206,12 @@ struct QuestsView: View {
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
     }
     
-    private func deleteQuest(quest: Quest) {
-        questsManager.deleteQuest(quest: quest)
-        print("deleteQuest: tit = " + quest.title + ", cat = " + quest.category.rawValue + ", id = " + quest.id)
-        
-        print("ALL:")
-        questsManager.printAllQuests()
-    }
-    
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
             let q = Quest(id: UUID().uuidString, title: title, category: category)
             questsManager.insertQuest(quest: q)
             print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
-            showQuestCreatedView = true
+            createNotification = true
         }
         newQuest = ""
     }

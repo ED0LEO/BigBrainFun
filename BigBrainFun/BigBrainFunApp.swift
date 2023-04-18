@@ -8,10 +8,18 @@
 import SwiftUI
 
 class Points: ObservableObject {
-    @Published var points: Int
+    @Published var points: Int {
+        didSet {
+            savePoints()
+        }
+    }
     
     init() {
-        points = 30
+        self.points = UserDefaults.standard.integer(forKey: "points")
+    }
+    
+    func savePoints() {
+        UserDefaults.standard.set(points, forKey: "points")
     }
 }
 
