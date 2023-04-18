@@ -8,6 +8,10 @@
 import SwiftUI
 import Vision
 
+import NaturalLanguage
+
+
+
 struct QuestFileAnalysisView: View {
     @EnvironmentObject var points: Points
     @State var quest: Quest
@@ -18,6 +22,37 @@ struct QuestFileAnalysisView: View {
     @State private var loadedImage: NSImage?
     
     let onClose: () -> Void
+    
+    func isJobDescription(title: String, text: String) -> Bool {
+        let tagger = NLTagger(tagSchemes: [.nameType])
+        tagger.string = text
+        let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation, .joinNames]
+        
+        let jobTitle = title.lowercased()
+        var jobWords: Set<String> = []
+        jobTitle.enumerateSubstrings(in: jobTitle.startIndex..., options: .byWords) { word, _, _, _ in
+            if let word = word {
+                jobWords.insert(word)
+            }
+        }
+        
+        var jobDescWords: Set<String> = []
+        tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
+            guard let tag = tag, let token = text[tokenRange].lowercased().trimmingCharacters(in: .whitespacesAndNewlines) as String?, !jobWords.contains(token) else {
+                return true
+            }
+            
+            if tag == .organizationName || tag == .placeName {
+                jobDescWords.insert(token)
+            }
+            
+            return true
+        }
+        
+        let commonWords = jobWords.intersection(jobDescWords)
+        return commonWords.count >= jobWords.count / 2
+    }
+    
     
     private func updateQuestDocumentURL(newURL: URL) {
         quest.documentURL = newURL
@@ -75,8 +110,12 @@ struct QuestFileAnalysisView: View {
                         if text.isEmpty {
                             self.analysisResult = "No text detected"
                         } else {
-                            self.analysisResult = "Text detected:\n\(text)"
-                            toggleCompletion()
+                            if isJobDescription(title: quest.title, text: text) {
+                                self.analysisResult = "Quest is completed.\nText detected:\n\(text)"
+                                toggleCompletion()
+                            } else {
+                                self.analysisResult = "Quest is not completed! Work doesn't match the title!\nText detected:\n\(text)"
+                            }
                         }
                     }
                     textRequest.recognitionLevel = .accurate
@@ -180,7 +219,7 @@ struct QuestFileAnalysisView: View {
             .background(Color.white)
             .cornerRadius(20)
             .shadow(radius: 10)
-         
+            
             if quest.isCompleted{
                 CelebrationView(points: 10)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -50,6 +50,7 @@ struct QuestsView: View {
     @State private var selectedCategory: Category = .study
     @State private var addCategory: Category = .study
     @State private var createNotification = false
+    @EnvironmentObject var points: Points
     
     var onQuestSelected: ((Quest) -> Void)?
     @FocusState private var focused: Bool
@@ -163,7 +164,7 @@ struct QuestsView: View {
                 PopoverView(isPresented: $isPopoverPresented)
             }
             
-            if isComplete {
+            if isComplete == true {
                 RollsAvailableView()
                     .transition(.move(edge: .bottom))
                     .animation(.easeOut(duration: 0.5))
@@ -199,6 +200,11 @@ struct QuestsView: View {
     }
     
     private func checkIfQuestCompleted() {
+        if points.points < 3 {
+            isPopoverPresented = true
+            return
+        }
+        
         for quest in sortedQuests {
             if quest.isCompleted {
                 isComplete = true
