@@ -11,7 +11,7 @@ import SceneKit
 struct TitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(Font.system(size: 36, weight: .bold))
+            .font(Font.system(size: 36, weight: .bold, design: .rounded))
             .foregroundColor(.white)
             .shadow(color: Color(red: 255/255, green: 102/255, blue: 102/255), radius: 4, x: 0, y: 0)
     }

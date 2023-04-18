@@ -158,19 +158,26 @@ struct QuestsView: View {
                     .padding()
                     .animation(.easeInOut(duration: 0.3))
                 }
-                
-                if isComplete {
-                    Image(systemName: "checkmark.circle.fill")
-                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.white)
-                }
             }
             .popover(isPresented: $isPopoverPresented, arrowEdge: .top) {
                 PopoverView(isPresented: $isPopoverPresented)
             }
             
-            if createNotification == true {
+            if isComplete {
+                RollsAvailableView()
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeOut(duration: 0.5))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                // set the state variable back to false to hide the view after a delay
+                                isComplete = false
+                            }
+                        }
+                    }
+            }
+            
+            if createNotification {
                 QuestCreatedView()
                     .transition(.move(edge: .bottom))
                     .animation(.easeOut(duration: 0.5))
@@ -198,7 +205,6 @@ struct QuestsView: View {
                 return
             }
         }
-        isComplete = false
         isPopoverPresented = true
     }
     
