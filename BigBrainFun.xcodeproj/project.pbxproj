@@ -15,6 +15,7 @@
 		0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
 		0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB64D8C29E463A200866CE3 /* QuestViews.swift */; };
+		0CBE7FCE29EF5ABA009DA255 /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */; };
 		0CC17D3A29E73C5E00F10C36 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC17D3929E73C5E00F10C36 /* BrowserView.swift */; };
 		0CDD671A29EDE7B000A793A6 /* NotificationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CDD671929EDE7B000A793A6 /* NotificationViews.swift */; };
 		0CE0BBDD29D89BAF00632086 /* BigBrainFunApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */; };
@@ -57,6 +58,7 @@
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CB64D8C29E463A200866CE3 /* QuestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViews.swift; sourceTree = "<group>"; };
+		0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = YOLOv3.mlmodel; path = ../../../Downloads/YOLOv3.mlmodel; sourceTree = "<group>"; };
 		0CC17D3929E73C5E00F10C36 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
 		0CDD671929EDE7B000A793A6 /* NotificationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViews.swift; sourceTree = "<group>"; };
 		0CE0BBD929D89BAF00632086 /* BigBrainFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BigBrainFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +117,7 @@
 		0CE0BBD029D89BAF00632086 = {
 			isa = PBXGroup;
 			children = (
+				0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */,
 				0CE0BBDB29D89BAF00632086 /* BigBrainFun */,
 				0CE0BBED29D89BB000632086 /* BigBrainFunTests */,
 				0CE0BBF729D89BB000632086 /* BigBrainFunUITests */,
@@ -313,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CBE7FCE29EF5ABA009DA255 /* YOLOv3.mlmodel in Sources */,
 				0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */,
 				0CFF077A29E6365F00AE8758 /* QuestFileAnalysisView.swift in Sources */,
 				0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */,

@@ -10,8 +10,6 @@ import Vision
 
 import NaturalLanguage
 
-
-
 struct QuestFileAnalysisView: View {
     @EnvironmentObject var points: Points
     @State var quest: Quest
@@ -50,10 +48,15 @@ struct QuestFileAnalysisView: View {
         }
         
         let commonWords = jobWords.intersection(jobDescWords)
+        
+        print("Job Title: \(jobTitle)")
+        print("Job Words: \(jobWords)")
+        print("Job Desc Words: \(jobDescWords)")
+        print("Common Words: \(commonWords)")
+        
         return commonWords.count >= jobWords.count / 2
     }
-    
-    
+
     private func updateQuestDocumentURL(newURL: URL) {
         quest.documentURL = newURL
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: quest.isCompleted, documentURL: newURL)
@@ -77,16 +80,20 @@ struct QuestFileAnalysisView: View {
             // Show loading bar
             isAnalyzing = true
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.global(qos: .userInitiated).async {
                 do {
                     let imageData = try Data(contentsOf: fileURL)
                     guard let image = NSImage(data: imageData) else {
-                        print("Failed to create image from data")
+                        DispatchQueue.main.async {
+                            self.analysisResult = "Failed to create image from data"
+                        }
                         return
                     }
                     
                     guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                        print("Failed to create CGImage from NSImage")
+                        DispatchQueue.main.async {
+                            self.analysisResult = "Failed to create CGImage from NSImage"
+                        }
                         return
                     }
                     
@@ -94,12 +101,16 @@ struct QuestFileAnalysisView: View {
                     let textRequest = VNRecognizeTextRequest { (request, error) in
                         defer {
                             // Hide loading bar
-                            isAnalyzing = false
+                            DispatchQueue.main.async {
+                                self.isAnalyzing = false
+                            }
                         }
                         
                         guard let observations = request.results as? [VNRecognizedTextObservation],
                               !observations.isEmpty else {
-                            self.analysisResult = "No text detected"
+                            DispatchQueue.main.async {
+                                self.analysisResult = "No text detected"
+                            }
                             return
                         }
                         
@@ -108,22 +119,30 @@ struct QuestFileAnalysisView: View {
                         }.joined(separator: "\n")
                         
                         if text.isEmpty {
-                            self.analysisResult = "No text detected"
+                            DispatchQueue.main.async {
+                                self.analysisResult = "No text detected"
+                            }
                         } else {
                             if isJobDescription(title: quest.title, text: text) {
-                                self.analysisResult = "Quest is completed.\nText detected:\n\(text)"
-                                toggleCompletion()
+                                DispatchQueue.main.async {
+                                    self.analysisResult = "Quest is completed.\nText detected:\n\(text)"
+                                    self.toggleCompletion()
+                                }
                             } else {
-                                self.analysisResult = "Quest is not completed! Work doesn't match the title!\nText detected:\n\(text)"
+                                DispatchQueue.main.async {
+                                    self.analysisResult = "Quest is not completed! Work doesn't match the title!\nText detected:\n\(text)"
+                                }
                             }
                         }
                     }
                     textRequest.recognitionLevel = .accurate
                     try requestHandler.perform([textRequest])
                 } catch {
-                    print("Error analyzing file: \(error.localizedDescription)")
-                    // Hide loading bar
-                    isAnalyzing = false
+                    DispatchQueue.main.async {
+                        self.analysisResult = "Error analyzing file: \(error.localizedDescription)"
+                        // Hide loading bar
+                        self.isAnalyzing = false
+                    }
                 }
             }
         }
