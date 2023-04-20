@@ -53,15 +53,13 @@ struct QuestFileAnalysisView: View {
             if !commonWords.isEmpty {
                 matched = true
                 print("Object matched the title!")
-                print("Title: \(title)")
-                print("Title Words: \(titleWords)")
-                print("Matched Words: \(matchedWords)")
-                print("Common Words: \(commonWords)")
+                print("IMGTitle Words: \(titleWords)")
+                print("IMGMatched Words: \(matchedWords)")
+                print("IMGCommon Words: \(commonWords)")
             } else {
                 print("Object didn't match the title.")
-                print("Title: \(title)")
-                print("Title Words: \(titleWords)")
-                print("Matched Words: \(matchedWords)")
+                print("IMGTitle Words: \(titleWords)")
+                print("IMGMatched Words: \(matchedWords)")
             }
         }
         
@@ -104,10 +102,10 @@ struct QuestFileAnalysisView: View {
         
         let commonWords = jobWords.intersection(jobDescWords)
         
-        print("Job Title: \(jobTitle)")
-        print("Job Words: \(jobWords)")
-        print("Job Desc Words: \(jobDescWords)")
-        print("Common Words: \(commonWords)")
+        print("TXTJob Title: \(jobTitle)")
+        print("TXTJob Words: \(jobWords)")
+        print("TXTJob Desc Words: \(jobDescWords)")
+        print("TXTCommon Words: \(commonWords)")
         
         return commonWords.count >= jobWords.count / 2
     }
@@ -124,97 +122,100 @@ struct QuestFileAnalysisView: View {
     }
     
     private func analyzeFile() {
-        
-        if quest.documentURL == nil{
+        guard let fileURL = quest.documentURL else {
             print("No file selected")
             return
         }
         
-        if let fileURL = quest.documentURL{
-            
-            // Show loading bar
-            isAnalyzing = true
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    let imageData = try Data(contentsOf: fileURL)
-                    guard let image = NSImage(data: imageData) else {
-                        DispatchQueue.main.async {
-                            self.analysisResult = "Failed to create image from data"
-                        }
+        // Show loading bar
+        isAnalyzing = true
+        
+        let dispatchGroup = DispatchGroup()
+        var text: String?
+        var imageDetected = false
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let imageData = try Data(contentsOf: fileURL)
+                guard let image = NSImage(data: imageData) else {
+                    DispatchQueue.main.async {
+                        self.analysisResult = "Failed to create image from data"
+                    }
+                    return
+                }
+                
+                guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                    DispatchQueue.main.async {
+                        self.analysisResult = "Failed to create CGImage from NSImage"
+                    }
+                    return
+                }
+                
+                let imageRecognitionGroup = DispatchGroup()
+                
+                imageRecognitionGroup.enter()
+                DispatchQueue.global(qos: .userInitiated).async {
+                    if isImageMatchingTitle(title: quest.title, image: cgImage) {
+                        imageDetected = true
+                    }
+                    imageRecognitionGroup.leave()
+                }
+                
+                let textRequest = VNRecognizeTextRequest { (request, error) in
+                    defer {
+                        dispatchGroup.leave()
+                    }
+                    
+                    guard let observations = request.results as? [VNRecognizedTextObservation],
+                          !observations.isEmpty else {
+                        text = ""
                         return
                     }
                     
-                    guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                        DispatchQueue.main.async {
-                            self.analysisResult = "Failed to create CGImage from NSImage"
-                        }
-                        return
-                    }
+                    text = observations.compactMap { observation in
+                        observation.topCandidates(1).first?.string
+                    }.joined(separator: "\n")
+                }
+                textRequest.recognitionLevel = .accurate
+                dispatchGroup.enter()
+                let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+                try requestHandler.perform([textRequest])
+                
+                dispatchGroup.wait()
+                
+                imageRecognitionGroup.wait()
+                
+                DispatchQueue.main.async {
+                    // Hide loading bar
+                    self.isAnalyzing = false
                     
-                    let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-                    let textRequest = VNRecognizeTextRequest { (request, error) in
-                        defer {
-                            // Hide loading bar
-                            DispatchQueue.main.async {
-                                self.isAnalyzing = false
-                            }
-                        }
-                        
-                        guard let observations = request.results as? [VNRecognizedTextObservation],
-                              !observations.isEmpty else {
-                            DispatchQueue.main.async {
-                                self.analysisResult = "No text detected"
-                            }
-                            return
-                        }
-                        
-                        let text = observations.compactMap { observation in
-                            observation.topCandidates(1).first?.string
-                        }.joined(separator: "\n")
-                        
+                    if let text = text {
                         if text.isEmpty {
-                            DispatchQueue.main.async {
-                                self.analysisResult = "No text detected"
-                            }
+                            self.analysisResult = "No text detected"
                         } else {
                             if isJobDescription(title: quest.title, text: text) {
-                                DispatchQueue.main.async {
-                                    self.analysisResult = "Text detected:\n\(text)"
-                                    self.toggleCompletion()
-                                }
-                            } else {
-                                DispatchQueue.main.async {
-                                    self.analysisResult = "Text detected:\n\(text)"
-                                }
-                            }
-                        }
-                        if !quest.isCompleted {
-                            if isImageMatchingTitle(title: quest.title, image: cgImage) {
-                                DispatchQueue.main.async {
-                                    self.analysisResult = "Object detected."
-                                    self.toggleCompletion()
-                                }
-                            }
-                            else {
-                                DispatchQueue.main.async {
-                                    self.analysisResult = "Object is not detected."
-                                }
+                                self.analysisResult = "Text detected:\n\(text)"
+                                self.toggleCompletion()
+                                return
                             }
                         }
                     }
-                    textRequest.recognitionLevel = .accurate
-                    try requestHandler.perform([textRequest])
-                } catch {
-                    DispatchQueue.main.async {
-                        self.analysisResult = "Error analyzing file: \(error.localizedDescription)"
-                        // Hide loading bar
-                        self.isAnalyzing = false
+                    
+                    if imageDetected {
+                        self.analysisResult = "Object detected."
+                        self.toggleCompletion()
+                    } else {
+                        self.analysisResult = "Object is not detected."
                     }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.analysisResult = "Error analyzing file: \(error.localizedDescription)"
+                    // Hide loading bar
+                    self.isAnalyzing = false
                 }
             }
         }
-        
     }
     
     var body: some View {
