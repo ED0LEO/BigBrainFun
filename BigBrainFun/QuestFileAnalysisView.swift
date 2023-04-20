@@ -21,6 +21,61 @@ struct QuestFileAnalysisView: View {
     
     let onClose: () -> Void
     
+    func isImageMatchingTitle(title: String, image: CGImage) -> Bool {
+        guard let model = try? YOLOv3(configuration: MLModelConfiguration()),
+              let visionModel = try? VNCoreMLModel(for: model.model) else {
+            print("Failed to load YOLOv3 model.")
+            return false
+        }
+        
+        let handler = VNImageRequestHandler(cgImage: image)
+        
+        var matched = false
+        
+        let request = VNCoreMLRequest(model: visionModel) { request, error in
+            guard let observations = request.results as? [VNRecognizedObjectObservation],
+                  let topObservation = observations.first else {
+                return
+            }
+            
+            let titleWords = Set(title.lowercased().components(separatedBy: " "))
+            let matchedWords = topObservation.labels
+                .filter { label in
+                    let labelWords = Set(label.identifier.lowercased().components(separatedBy: " "))
+                    let commonWords = titleWords.intersection(labelWords)
+                    let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
+                    return commonWordsRatio >= 0.5 // Filter out labels that don't have enough common words with the title
+                }
+                .map { $0.identifier.lowercased() }
+            
+            let commonWords = titleWords.intersection(matchedWords)
+            
+            if !commonWords.isEmpty {
+                matched = true
+                print("Object matched the title!")
+                print("Title: \(title)")
+                print("Title Words: \(titleWords)")
+                print("Matched Words: \(matchedWords)")
+                print("Common Words: \(commonWords)")
+            } else {
+                print("Object didn't match the title.")
+                print("Title: \(title)")
+                print("Title Words: \(titleWords)")
+                print("Matched Words: \(matchedWords)")
+            }
+        }
+        
+        do {
+            try handler.perform([request])
+        } catch {
+            print("Failed to perform image recognition.")
+            return false
+        }
+        
+        return matched
+    }
+    
+    
     func isJobDescription(title: String, text: String) -> Bool {
         let tagger = NLTagger(tagSchemes: [.nameType])
         tagger.string = text
@@ -56,7 +111,7 @@ struct QuestFileAnalysisView: View {
         
         return commonWords.count >= jobWords.count / 2
     }
-
+    
     private func updateQuestDocumentURL(newURL: URL) {
         quest.documentURL = newURL
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: quest.isCompleted, documentURL: newURL)
@@ -125,12 +180,25 @@ struct QuestFileAnalysisView: View {
                         } else {
                             if isJobDescription(title: quest.title, text: text) {
                                 DispatchQueue.main.async {
-                                    self.analysisResult = "Quest is completed.\nText detected:\n\(text)"
+                                    self.analysisResult = "Text detected:\n\(text)"
                                     self.toggleCompletion()
                                 }
                             } else {
                                 DispatchQueue.main.async {
-                                    self.analysisResult = "Quest is not completed! Work doesn't match the title!\nText detected:\n\(text)"
+                                    self.analysisResult = "Text detected:\n\(text)"
+                                }
+                            }
+                        }
+                        if !quest.isCompleted {
+                            if isImageMatchingTitle(title: quest.title, image: cgImage) {
+                                DispatchQueue.main.async {
+                                    self.analysisResult = "Object detected."
+                                    self.toggleCompletion()
+                                }
+                            }
+                            else {
+                                DispatchQueue.main.async {
+                                    self.analysisResult = "Object is not detected."
                                 }
                             }
                         }
