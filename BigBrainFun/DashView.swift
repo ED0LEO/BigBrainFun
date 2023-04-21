@@ -68,6 +68,7 @@ struct WinView: View {
     }
 }
 
+
 struct PlayView: View{
     @EnvironmentObject var points: Points
     @State private var isRolling = false
@@ -97,10 +98,12 @@ struct PlayView: View{
                         .fill(Color.white.opacity(0.9))
                         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
                 )
+                .id(points.points) // Add an ID based on points value to enable animation
+                .animation(.spring()) // Add animation
                 .onReceive(points.$points) { _ in
                     // Update the view whenever `points` changes
                 }
-            
+
             GeometryReader { geometry in
                 HStack(spacing: 40) {
                     Spacer()
