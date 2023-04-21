@@ -14,6 +14,7 @@
 		0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */; };
 		0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
+		0C70DA3629F1F6D600C52DF1 /* button-pressed-38129.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0C70DA3529F1F6D600C52DF1 /* button-pressed-38129.mp3 */; };
 		0CB64D8D29E463A200866CE3 /* QuestViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB64D8C29E463A200866CE3 /* QuestViews.swift */; };
 		0CBE7FCE29EF5ABA009DA255 /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */; };
 		0CC17D3A29E73C5E00F10C36 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC17D3929E73C5E00F10C36 /* BrowserView.swift */; };
@@ -56,6 +57,7 @@
 		0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsManager.swift; sourceTree = "<group>"; };
 		0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		0C70DA3529F1F6D600C52DF1 /* button-pressed-38129.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-pressed-38129.mp3"; path = "../../../Downloads/button-pressed-38129.mp3"; sourceTree = "<group>"; };
 		0C95C42F29DA3CA00070832C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0CB64D8C29E463A200866CE3 /* QuestViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViews.swift; sourceTree = "<group>"; };
 		0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = YOLOv3.mlmodel; path = ../../../Downloads/YOLOv3.mlmodel; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		0CE0BBD029D89BAF00632086 = {
 			isa = PBXGroup;
 			children = (
+				0C70DA3529F1F6D600C52DF1 /* button-pressed-38129.mp3 */,
 				0CBE7FCD29EF5ABA009DA255 /* YOLOv3.mlmodel */,
 				0CE0BBDB29D89BAF00632086 /* BigBrainFun */,
 				0CE0BBED29D89BB000632086 /* BigBrainFunTests */,
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CE0BBE429D89BB000632086 /* Preview Assets.xcassets in Resources */,
+				0C70DA3629F1F6D600C52DF1 /* button-pressed-38129.mp3 in Resources */,
 				0CE0BBE129D89BB000632086 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -15,9 +15,8 @@ struct GrowingGradButton: ButtonStyle {
                 ZStack {
                     AngularGradient(gradient: Gradient(colors: [Color.pink, Color(red: 1, green: 0.65, blue: 0.8)]),
                                     center: .center,
-                                    startAngle: .degrees(0),
-                                    endAngle: .degrees(configuration.isPressed ? 360 : 0))
-                    .opacity(configuration.isPressed ? 0.8 : 1)
+                                    startAngle: .degrees(configuration.isPressed ? 0 : -90),
+                                    endAngle: .degrees(configuration.isPressed ? 360 : -90))
                     .blur(radius: configuration.isPressed ? 10 : 0)
                     .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
@@ -37,6 +36,7 @@ struct GrowingGradButton: ButtonStyle {
             .foregroundColor(.white)
             .font(.system(size: 32, weight: .semibold))
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .opacity(configuration.isPressed ? 0.8 : 1)
             .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
 }

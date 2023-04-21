@@ -51,13 +51,22 @@ struct QuestsView: View {
     @State private var addCategory: Category = .study
     @State private var createNotification = false
     @EnvironmentObject var points: Points
+    @State private var showCompletedQuests = false
+    @FocusState private var focused: Bool
     
     var onQuestSelected: ((Quest) -> Void)?
-    @FocusState private var focused: Bool
     
     var sortedQuests: [Quest] {
         let quests = questsManager.getAllQuests()
-        return quests.sorted { $0.category.rawValue < $1.category.rawValue }
+        return quests.sorted(by: { $0.title < $1.title })
+    }
+    
+    var filteredQuests: [Quest] {
+        if showCompletedQuests {
+            return sortedQuests.filter { $0.isCompleted && $0.category == selectedCategory }
+        } else {
+            return sortedQuests.filter { !$0.isCompleted && $0.category == selectedCategory }
+        }
     }
     
     var categories: [Category] {
@@ -67,14 +76,33 @@ struct QuestsView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Current quests")
-                    .titleStyle()
-                    .padding(.bottom)
+                HStack {
+                    Text("Current quests")
+                        .titleStyle()
+                        .padding(.bottom)
+                        .padding(.horizontal)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        showCompletedQuests.toggle()
+                    }) {
+                        Image(systemName: showCompletedQuests ? "checkmark.seal.fill" : "checkmark.seal")
+                            .font(.system(size: 24))
+                            .foregroundColor(showCompletedQuests ? Color.white : Color.gray)
+                            .frame(width: 40, height: 40)
+                            .background(showCompletedQuests ? Color.green : Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .padding(.horizontal, 8)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    
+                }
                 
                 CategoryPickerView(selectedCategory: $selectedCategory)
                 
                 ScrollView {
-                    ForEach(sortedQuests.filter { $0.category == selectedCategory }) { oldQuest in
+                    ForEach(filteredQuests) { oldQuest in
                         let quest = returnQuestbyId(id: oldQuest.id)
                         
                         Button(action: {

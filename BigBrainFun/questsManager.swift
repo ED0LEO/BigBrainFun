@@ -190,7 +190,14 @@ class QuestsManager: ObservableObject {
                     continue
                 }
 
-                let isCompleted = isCompletedValue != nil
+                let isCompleted: Bool
+                if let isCompletedValue = sqlite3_column_text(queryStatement, 2) {
+                    let isCompletedInt = Int32(sqlite3_column_int(queryStatement, 2))
+                    isCompleted = isCompletedInt == 1
+                } else {
+                    isCompleted = false
+                }
+
                 
                 let documentURLString = String(cString: documentURLValue)
                 let documentURL = !documentURLString.isEmpty ? URL(string: documentURLString) : nil
