@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct GrowingGradButton: ButtonStyle {
+    @State private var player: AVAudioPlayer?
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(20)
@@ -17,10 +20,10 @@ struct GrowingGradButton: ButtonStyle {
                                     center: .center,
                                     startAngle: .degrees(configuration.isPressed ? 0 : -90),
                                     endAngle: .degrees(configuration.isPressed ? 360 : -90))
-                    .blur(radius: configuration.isPressed ? 10 : 0)
-                    .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .shadow(color: Color(red: 1, green: 0.65, blue: 0.8).opacity(0.8), radius: 10, x: 0, y: 5)
+                        .blur(radius: configuration.isPressed ? 10 : 0)
+                        .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+                        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .shadow(color: Color(red: 1, green: 0.65, blue: 0.8).opacity(0.8), radius: 10, x: 0, y: 5)
                     
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .strokeBorder(Color.white, lineWidth: 3)
@@ -38,6 +41,19 @@ struct GrowingGradButton: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
             .opacity(configuration.isPressed ? 0.8 : 1)
             .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
+            .onAppear {
+                guard let url = Bundle.main.url(forResource: "button-pressed-38129", withExtension: "mp3") else { return }
+                do {
+                    player = try AVAudioPlayer(contentsOf: url)
+                } catch {
+                    print("Failed to load sound file")
+                }
+            }
+            .onChange(of: configuration.isPressed) { isPressed in
+                if !isPressed {
+                    player?.play()
+                }
+            }
     }
 }
 
