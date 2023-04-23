@@ -248,49 +248,65 @@ struct QuestFileAnalysisView: View {
                         .padding(.vertical, 10)
                 }
                 
-                Text("Select a file to analyze:")
-                    .padding(.bottom)
-                    .foregroundColor(.black)
-                
-                HStack {
-                    Button(action: {
-                        let openPanel = NSOpenPanel()
-                        openPanel.allowedFileTypes = ["jpg", "png"]
-                        
-                        if openPanel.runModal() == NSApplication.ModalResponse.OK {
-                            selectedFileURL = openPanel.url
-                            if let selectedURL = selectedFileURL{
-                                updateQuestDocumentURL(newURL: selectedURL)
-                            }
-                        }
-                    }, label: {
-                        Text("Choose File")
-                    })
-                    .buttonStyle(SelectFileButton())
+                if !quest.isCompleted {
+                    Text("Select a file to analyze:")
+                        .padding(.bottom)
+                        .foregroundColor(.black)
                     
-                    if let fileURL = selectedFileURL {
-                        Text(fileURL.lastPathComponent)
-                            .foregroundColor(.black)
+                    HStack {
+                        Button(action: {
+                            let openPanel = NSOpenPanel()
+                            openPanel.allowedFileTypes = ["jpg", "png"]
+                            
+                            if openPanel.runModal() == NSApplication.ModalResponse.OK {
+                                selectedFileURL = openPanel.url
+                                if let selectedURL = selectedFileURL{
+                                    updateQuestDocumentURL(newURL: selectedURL)
+                                }
+                            }
+                        }, label: {
+                            Text("Choose File")
+                        })
+                        .buttonStyle(SelectFileButton())
+                        
+                        if let fileURL = selectedFileURL {
+                            Text(fileURL.lastPathComponent)
+                                .foregroundColor(.black)
+                        }
                     }
-                }
-                .padding(.bottom, 30)
-                
-                Spacer()
-                
-                if isAnalyzing {
-                    ProgressView("")
-                        .progressViewStyle(LinearProgressViewStyle())
-                        .accentColor(.purple)
-                        .padding(.bottom, 30)
-                }
-                else {
-                    Button(action: {
-                        analyzeFile()
-                    }) {
-                        Text("Analyze File")
-                    }
-                    .buttonStyle(AnalyzeButton())
                     .padding(.bottom, 30)
+                    
+                    Spacer()
+                    
+                    if isAnalyzing {
+                        ProgressView("")
+                            .progressViewStyle(LinearProgressViewStyle())
+                            .accentColor(.purple)
+                            .padding(.bottom, 30)
+                    }
+                    else {
+                        Button(action: {
+                            analyzeFile()
+                        }) {
+                            Text("Analyze File")
+                        }
+                        .buttonStyle(AnalyzeButton())
+                        .padding(.bottom, 30)
+                        
+                        if let result = analysisResult {
+                            ScrollView {
+                                Text(result)
+                                    .padding()
+                                    .foregroundColor(.black)
+                            }
+                            .frame(height: 100)
+                            .padding(.bottom, 30)
+                        }
+                    }
+                }
+                else
+                {
+                    Spacer()
                     
                     if let result = analysisResult {
                         ScrollView {
