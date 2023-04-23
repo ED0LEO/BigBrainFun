@@ -259,7 +259,7 @@ struct QuestsView: View {
 
 struct QuestDetailsView: View {
     @EnvironmentObject var questsManager: QuestsManager
-    @State var quest: Quest
+    @Binding var quest: Quest
     @Binding var analyzing: Bool
     
     let onClose: () -> Void

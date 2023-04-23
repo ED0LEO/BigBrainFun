@@ -12,7 +12,7 @@ import NaturalLanguage
 
 struct QuestFileAnalysisView: View {
     @EnvironmentObject var points: Points
-    @State var quest: Quest
+    @Binding var quest: Quest
     @EnvironmentObject var questsManager: QuestsManager
     @State var selectedFileURL: URL?
     @State private var analysisResult: String?

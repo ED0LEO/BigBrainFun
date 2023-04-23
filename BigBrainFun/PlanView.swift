@@ -34,13 +34,19 @@ struct PlanView: View {
                     selectedQuest = quest
                 })
             } else if !isAnalyzing {
-                QuestDetailsView(quest: selectedQuest!, analyzing: $isAnalyzing, onClose: {
+                QuestDetailsView(quest: Binding(
+                    get: { selectedQuest! },
+                    set: { selectedQuest = $0 }
+                ), analyzing: $isAnalyzing, onClose: {
                     selectedQuest = nil
                 })
             }
             else
             {
-                QuestFileAnalysisView(quest: selectedQuest!, onClose: {
+                QuestFileAnalysisView(quest: Binding(
+                    get: { selectedQuest! },
+                    set: { selectedQuest = $0 }
+                ), onClose: {
                     isAnalyzing = false
                 })
             }
