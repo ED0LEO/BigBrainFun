@@ -244,6 +244,7 @@ struct QuestFileAnalysisView: View {
                     Image(nsImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                         .padding(.horizontal, 20)
                         .padding(.vertical, 10)
                 }
