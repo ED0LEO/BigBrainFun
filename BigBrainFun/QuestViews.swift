@@ -96,7 +96,7 @@ struct QuestsView: View {
                             .padding(.horizontal, 8)
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    
+                    .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
                 }
                 
                 CategoryPickerView(selectedCategory: $selectedCategory)
@@ -137,8 +137,7 @@ struct QuestsView: View {
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         .padding(.trailing, 8)
-                        
-                        
+                        .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
                     }
                 }
                 
@@ -220,7 +219,7 @@ struct QuestsView: View {
                     }
             }
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
+//        .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
     }
     
     private func returnQuestbyId(id: String) -> Quest{
