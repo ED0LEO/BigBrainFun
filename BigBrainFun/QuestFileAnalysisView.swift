@@ -47,15 +47,16 @@ struct QuestFileAnalysisView: View {
                     return false
                 }
 
+                let relatedWords: WordSet = Set(getRelatedWords(for: titleWords))
                 let labelWords: WordSet = Set(label.identifier.lowercased().components(separatedBy: " "))
-                let commonWords = titleWords.intersection(labelWords)
+                let commonWords = relatedWords.intersection(labelWords)
                 let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
 
                 // Filter out low-confidence predictions and predictions that are too small or too large
                 let sizeThreshold: CGFloat = 0.1
                 
-                
                 print("labelWords: \(labelWords)")
+                print("relatedWords: \(relatedWords)")
                 print("commonWords: \(commonWords)")
                 print("commonWordsRatio: \(commonWordsRatio)")
                 print("observation.labels.first: \(observation.labels.first)")
@@ -83,8 +84,20 @@ struct QuestFileAnalysisView: View {
         return matched
     }
 
-    
-    
+    func getRelatedWords(for words: WordSet) -> [String] {
+        var relatedWords: [String] = []
+        for word in words {
+            let wordEmbedding = NLEmbedding.wordEmbedding(for: .english)
+            let similarWords = wordEmbedding?.neighbors(for: word, maximumCount: 10)
+                .compactMap({ $0.0 })
+                .filter({ $0 != word })
+            if let similarWords = similarWords {
+                relatedWords.append(contentsOf: similarWords)
+            }
+        }
+        return relatedWords
+    }
+
     func isJobDescription(title: String, text: String) -> Bool {
         let tagger = NLTagger(tagSchemes: [.nameType])
         tagger.string = text
@@ -98,13 +111,19 @@ struct QuestFileAnalysisView: View {
             }
         }
         
+        var relatedWords: Set<String> = []
+        let relatedWordsArray = getRelatedWords(for: jobWords)
+        relatedWords.formUnion(relatedWordsArray)
+        
         var jobDescWords: Set<String> = []
         tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
             guard let tag = tag, let token = text[tokenRange].lowercased().trimmingCharacters(in: .whitespacesAndNewlines) as String?, !jobWords.contains(token) else {
                 return true
             }
             
-            if tag == .organizationName || tag == .placeName {
+            if tag == .organizationName || tag == .placeName || tag == .personalName {
+                jobDescWords.insert(token)
+            } else if relatedWords.contains(token) {
                 jobDescWords.insert(token)
             }
             
@@ -120,7 +139,7 @@ struct QuestFileAnalysisView: View {
         
         return commonWords.count >= jobWords.count / 2
     }
-    
+
     private func updateQuestDocumentURL(newURL: URL) {
         quest.documentURL = newURL
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: quest.isCompleted, documentURL: newURL)
