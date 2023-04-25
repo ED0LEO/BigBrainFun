@@ -134,10 +134,11 @@ struct QuestFileAnalysisView: View {
         
         print("TXTJob Title: \(jobTitle)")
         print("TXTJob Words: \(jobWords)")
+        print("TXTrelated Words: \(relatedWords)")
         print("TXTJob Desc Words: \(jobDescWords)")
         print("TXTCommon Words: \(commonWords)")
         
-        return commonWords.count >= jobWords.count / 2
+        return commonWords.count >= jobWords.count / 3
     }
 
     private func updateQuestDocumentURL(newURL: URL) {
