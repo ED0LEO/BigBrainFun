@@ -20,58 +20,69 @@ struct QuestFileAnalysisView: View {
     @State private var loadedImage: NSImage?
     
     let onClose: () -> Void
-    
+    typealias WordSet = Set<String>
+    typealias LabelSet = Set<String>
+
     func isImageMatchingTitle(title: String, image: CGImage) -> Bool {
-        guard let model = try? YOLOv3(configuration: MLModelConfiguration()),
+        guard let model = try? EfficientDet(configuration: MLModelConfiguration()),
               let visionModel = try? VNCoreMLModel(for: model.model) else {
-            print("Failed to load YOLOv3 model.")
+            print("Failed to load EfficientDet model.")
             return false
         }
-        
+
         let handler = VNImageRequestHandler(cgImage: image)
-        
+
         var matched = false
-        
+
         let request = VNCoreMLRequest(model: visionModel) { request, error in
-            guard let observations = request.results as? [VNRecognizedObjectObservation],
-                  let topObservation = observations.first else {
+            guard let observations = request.results as? [VNRecognizedObjectObservation] else {
+                print("Failed to get object detection results.")
                 return
             }
-            
-            let titleWords = Set(title.lowercased().components(separatedBy: " "))
-            let matchedWords = topObservation.labels
-                .filter { label in
-                    let labelWords = Set(label.identifier.lowercased().components(separatedBy: " "))
-                    let commonWords = titleWords.intersection(labelWords)
-                    let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
-                    return commonWordsRatio >= 0.5 // Filter out labels that don't have enough common words with the title
+
+            let titleWords: WordSet = Set(title.lowercased().components(separatedBy: " "))
+
+            let relevantObservations = observations.filter { observation in
+                guard let label = observation.labels.first else {
+                    return false
                 }
-                .map { $0.identifier.lowercased() }
-            
-            let commonWords = titleWords.intersection(matchedWords)
-            
-            if !commonWords.isEmpty {
+
+                let labelWords: WordSet = Set(label.identifier.lowercased().components(separatedBy: " "))
+                let commonWords = titleWords.intersection(labelWords)
+                let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
+
+                // Filter out low-confidence predictions and predictions that are too small or too large
+                let sizeThreshold: CGFloat = 0.1
+                
+                
+                print("labelWords: \(labelWords)")
+                print("commonWords: \(commonWords)")
+                print("commonWordsRatio: \(commonWordsRatio)")
+                print("observation.labels.first: \(observation.labels.first)")
+                
+                return observation.confidence > 0.5 &&
+                    commonWordsRatio >= 0.5 &&
+                    observation.boundingBox.width >= sizeThreshold &&
+                    observation.boundingBox.height >= sizeThreshold &&
+                    observation.boundingBox.width <= 1 - sizeThreshold &&
+                    observation.boundingBox.height <= 1 - sizeThreshold
+            }
+
+            if !relevantObservations.isEmpty {
                 matched = true
-                print("Object matched the title!")
-                print("IMGTitle Words: \(titleWords)")
-                print("IMGMatched Words: \(matchedWords)")
-                print("IMGCommon Words: \(commonWords)")
-            } else {
-                print("Object didn't match the title.")
-                print("IMGTitle Words: \(titleWords)")
-                print("IMGMatched Words: \(matchedWords)")
             }
         }
-        
+
         do {
             try handler.perform([request])
         } catch {
             print("Failed to perform image recognition.")
             return false
         }
-        
+
         return matched
     }
+
     
     
     func isJobDescription(title: String, text: String) -> Bool {
