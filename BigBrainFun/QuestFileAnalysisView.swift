@@ -99,10 +99,10 @@ struct QuestFileAnalysisView: View {
     }
 
     func isJobDescription(title: String, text: String) -> Bool {
-        let tagger = NLTagger(tagSchemes: [.nameType])
+        let tagger = NLTagger(tagSchemes: [.lexicalClass])
         tagger.string = text
         let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation, .joinNames]
-        
+
         let jobTitle = title.lowercased()
         var jobWords: Set<String> = []
         jobTitle.enumerateSubstrings(in: jobTitle.startIndex..., options: .byWords) { word, _, _, _ in
@@ -110,34 +110,34 @@ struct QuestFileAnalysisView: View {
                 jobWords.insert(word)
             }
         }
-        
+
         var relatedWords: Set<String> = []
         let relatedWordsArray = getRelatedWords(for: jobWords)
         relatedWords.formUnion(relatedWordsArray)
-        
+
         var jobDescWords: Set<String> = []
-        tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
+        tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange in
             guard let tag = tag, let token = text[tokenRange].lowercased().trimmingCharacters(in: .whitespacesAndNewlines) as String?, !jobWords.contains(token) else {
                 return true
             }
-            
-            if tag == .organizationName || tag == .placeName || tag == .personalName {
+
+            if tag == .noun || tag == .verb || tag == .adjective || tag == .adverb {
                 jobDescWords.insert(token)
             } else if relatedWords.contains(token) {
                 jobDescWords.insert(token)
             }
-            
+
             return true
         }
-        
+
         let commonWords = jobWords.intersection(jobDescWords)
-        
+
         print("TXTJob Title: \(jobTitle)")
         print("TXTJob Words: \(jobWords)")
         print("TXTrelated Words: \(relatedWords)")
         print("TXTJob Desc Words: \(jobDescWords)")
         print("TXTCommon Words: \(commonWords)")
-        
+
         return commonWords.count >= jobWords.count / 3
     }
 
