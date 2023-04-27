@@ -53,16 +53,23 @@ struct QuestFileAnalysisView: View {
                 let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
 
                 // Filter out low-confidence predictions and predictions that are too small or too large
-                let sizeThreshold: CGFloat = 0.1
-                
+                let sizeThreshold: CGFloat = 0.05
+
                 print("labelWords: \(labelWords)")
-                print("relatedWords: \(relatedWords)")
-                print("commonWords: \(commonWords)")
-                print("commonWordsRatio: \(commonWordsRatio)")
-                print("observation.labels.first: \(observation.labels.first)")
+                            print("relatedWords: \(relatedWords)")
+                            print("commonWords: \(commonWords)")
+                            print("commonWordsRatio: \(commonWordsRatio)")
+                            print("observation.labels.first: \(observation.labels.first)")
                 
-                return observation.confidence > 0.5 &&
-                    commonWordsRatio >= 0.5 &&
+                // Count it as a match if at least one word (its base) matched
+                let matched = relatedWords.contains { relatedWord in
+                    return labelWords.contains { labelWord in
+                        return relatedWord == getBaseWord(for: labelWord)
+                    }
+                }
+
+                return observation.confidence > 0.3 &&
+                    matched &&
                     observation.boundingBox.width >= sizeThreshold &&
                     observation.boundingBox.height >= sizeThreshold &&
                     observation.boundingBox.width <= 1 - sizeThreshold &&
@@ -82,6 +89,23 @@ struct QuestFileAnalysisView: View {
         }
 
         return matched
+    }
+
+    func getBaseWord(for word: String) -> String {
+        let tagger = NSLinguisticTagger(tagSchemes: [.lemma], options: 0)
+        tagger.string = word
+
+        var baseWord = word
+        let range = NSRange(location: 0, length: word.utf16.count)
+
+        tagger.enumerateTags(in: range, unit: .word, scheme: .lemma) { tag, tokenRange, _ in
+            if let lemma = tag?.rawValue {
+                baseWord = (word as NSString).substring(with: tokenRange)
+                baseWord = lemma
+            }
+        }
+
+        return baseWord
     }
 
     func getRelatedWords(for words: WordSet) -> [String] {
@@ -138,7 +162,7 @@ struct QuestFileAnalysisView: View {
         print("TXTJob Desc Words: \(jobDescWords)")
         print("TXTCommon Words: \(commonWords)")
 
-        return commonWords.count >= jobWords.count / 3
+        return commonWords.count >= jobWords.count / 4
     }
 
     private func updateQuestDocumentURL(newURL: URL) {

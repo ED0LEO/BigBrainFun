@@ -1,8 +1,29 @@
 import SwiftUI
 
+struct LanguagePickerView: View {
+    @Binding var languageCode: String
+    
+    var body: some View {
+        VStack {
+            Text("Select a language:")
+                .font(.headline)
+                .padding(.top)
+            Picker(selection: $languageCode, label: Text("Language")) {
+                Text("English").tag("en")
+                Text("Spanish").tag("es")
+                Text("French").tag("fr")
+            }
+            .pickerStyle(MenuPickerStyle())
+        }
+        .padding()
+    }
+}
+
 struct ContentView: View {
     @State private var selection = 0
     @State private var isBackgroundViewEnabled = true
+    @State private var isLanguagePickerShowing = false
+    @State private var selectedLanguageCode = "en"
     
     var body: some View {
         GeometryReader { geometry in
@@ -66,6 +87,15 @@ struct ContentView: View {
                             }
                             .buttonStyle(SideButtonStyle())
                             .padding(5)
+                            
+                            Button(action: { isLanguagePickerShowing.toggle() }) {
+                                Image(systemName: "globe")
+                            }
+                            .buttonStyle(SideButtonStyle())
+                            .padding(5)
+                            .popover(isPresented: $isLanguagePickerShowing) {
+                                LanguagePickerView(languageCode: $selectedLanguageCode)
+                            }
                         }
                     }
                     .padding(.trailing, 20)
