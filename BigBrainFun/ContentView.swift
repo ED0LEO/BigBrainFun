@@ -1,21 +1,53 @@
 import SwiftUI
 
+struct GameButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(10)
+            .background(configuration.isPressed ? Color.gray : Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+    }
+}
+
 struct LanguagePickerView: View {
     @Binding var languageCode: String
+    let languages = ["en", "fr"]
     
     var body: some View {
         VStack {
-            Text("Select a language:")
+            Text(NSLocalizedString("Select a language", comment: "Prompt for language selection"))
                 .font(.headline)
-                .padding(.top)
-            Picker(selection: $languageCode, label: Text("Language")) {
-                Text("English").tag("en")
-                Text("Spanish").tag("es")
-                Text("French").tag("fr")
+                .padding(.top, 20)
+            
+            ForEach(languages, id: \.self) { language in
+                Button(action: {
+                    languageCode = language
+                    LanguageManager.shared.setLanguage(languageCode)
+                }) {
+                    HStack {
+                        Image(systemName: language == "en" ? "globe" : "globe.europe.africa")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 20)
+                            .foregroundColor(languageCode == language ? .white : .gray)
+                            .background(languageCode == language ? Color.blue : Color.gray.opacity(0.1))
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                            .padding(.horizontal, 8)
+                        
+                        Text(LocalizedStringKey(language == "en" ? "English" : "Français"))
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(languageCode == language ? .blue : .black)
+                            .padding(.leading, 10)
+                    }
+                    .frame(width: 130, height: 44)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
             }
-            .pickerStyle(MenuPickerStyle())
         }
-        .padding()
+        .padding(.bottom, 20)
     }
 }
 
@@ -41,7 +73,7 @@ struct ContentView: View {
                         DashView()
                             .tag(0)
                             .tabItem {
-                                Label("Dash", systemImage: "circle.fill")
+                                Label(NSLocalizedString("Dash", comment: ""), systemImage: "circle.fill")
                             }
                         
                         PlanView()
@@ -95,6 +127,7 @@ struct ContentView: View {
                             .padding(5)
                             .popover(isPresented: $isLanguagePickerShowing) {
                                 LanguagePickerView(languageCode: $selectedLanguageCode)
+                                
                             }
                         }
                     }

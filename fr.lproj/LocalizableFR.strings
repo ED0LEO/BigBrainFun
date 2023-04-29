@@ -1,0 +1,16 @@
+/* 
+  LocalizableFR.strings
+  BigBrainFun
+
+  Created by Ed on 28/04/2023.
+  
+*/
+
+"Select a language" = "Selectionnez une langue";
+"English" = "Anglais";
+"French" = "Français";
+"Dash" = "Tableau de bord";
+"Quests" = "Quêtes";
+"Guide" = "Guide";
+"VideoTEST" = "Vidéo de test";
+"Browser" = "Navigateur";
