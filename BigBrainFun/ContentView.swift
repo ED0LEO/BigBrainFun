@@ -1,15 +1,5 @@
 import SwiftUI
 
-struct GameButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(10)
-            .background(configuration.isPressed ? Color.gray : Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-    }
-}
-
 struct LanguagePickerView: View {
     @Binding var languageCode: String
     let languages = ["en", "fr"]
@@ -26,20 +16,19 @@ struct LanguagePickerView: View {
                     LanguageManager.shared.setLanguage(languageCode)
                 }) {
                     HStack {
-                        Image(systemName: language == "en" ? "globe" : "globe.europe.africa")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20)
-                            .foregroundColor(languageCode == language ? .white : .gray)
-                            .background(languageCode == language ? Color.blue : Color.gray.opacity(0.1))
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                            .padding(.horizontal, 8)
+                        if languageCode == language {
+                            Image(systemName: "globe")
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(languageCode == language ? .white : .gray)
+                                .background(languageCode == language ? Color.blue : Color.gray.opacity(0.1))
+                                .frame(width: 25)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                        }
                         
                         Text(LocalizedStringKey(language == "en" ? "English" : "Français"))
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(languageCode == language ? .blue : .black)
-                            .padding(.leading, 10)
                     }
                     .frame(width: 130, height: 44)
                 }
@@ -79,7 +68,7 @@ struct ContentView: View {
                         PlanView()
                             .tag(1)
                             .tabItem {
-                                Label("Quests", systemImage: "square.fill")
+                                Label(NSLocalizedString("Quests", comment: ""), systemImage: "square.fill")
                             }
                         
                         RulesView()
@@ -127,7 +116,6 @@ struct ContentView: View {
                             .padding(5)
                             .popover(isPresented: $isLanguagePickerShowing) {
                                 LanguagePickerView(languageCode: $selectedLanguageCode)
-                                
                             }
                         }
                     }
