@@ -23,7 +23,6 @@ class LanguageManager {
         UserDefaults.standard.synchronize()
         
         NotificationCenter.default.post(name: Notification.Name("LanguageChanged"), object: nil)
-        
         Bundle.swizzleBundle(bundle)
     }
     
