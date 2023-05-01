@@ -8,6 +8,19 @@
 import SwiftUI
 import AVFoundation
 
+struct LanguagePickerButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .padding(5)
+            .background(configuration.isPressed ? Color.blue.opacity(0.5) : Color.clear)
+            .clipShape(Circle())
+            .overlay(
+                Circle()
+                    .stroke(configuration.isPressed ? Color.clear : Color.blue, lineWidth: 2)
+            )
+    }
+}
+
 struct GrowingGradButton: ButtonStyle {
     @State private var player: AVAudioPlayer?
     
@@ -97,7 +110,6 @@ struct SideButtonStyle: ButtonStyle {
                 }
             )
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
-            .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))
             .rotationEffect(Angle(degrees: configuration.isPressed ? 10 : 0))
             .offset(x: configuration.isPressed ? 30 : 0, y: configuration.isPressed ? 30 : 0)
             .animation(.spring(response: 0.4, dampingFraction: 0.4, blendDuration: 0))

@@ -128,7 +128,7 @@ struct ContentView: View {
                             Button(action: { isLanguagePickerShowing.toggle() }) {
                                 Image(systemName: "globe")
                             }
-                            .buttonStyle(SideButtonStyle())
+                            .buttonStyle(LanguagePickerButtonStyle())
                             .padding(5)
                             .popover(isPresented: $isLanguagePickerShowing) {
                                 LanguagePickerView(languageCode: $selectedLanguageCode)
