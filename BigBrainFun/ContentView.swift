@@ -12,9 +12,18 @@ struct LanguagePickerView: View {
             
             ForEach(languages, id: \.self) { language in
                 Button(action: {
-                    languageCode = language
-                    LanguageManager.shared.setLanguage(languageCode)
-                    UserDefaults.standard.set(languageCode, forKey: "selectedLanguageCode")
+                    if languageCode != language {
+                        languageCode = language
+                        LanguageManager.shared.setLanguage(languageCode)
+                        UserDefaults.standard.set(languageCode, forKey: "selectedLanguageCode")
+                        
+                        // Restart the app
+                        let task = Process()
+                        task.launchPath = "/usr/bin/open"
+                        task.arguments = ["-n", "-b", Bundle.main.bundleIdentifier ?? ""]
+                        task.launch()
+                        NSApp.terminate(self)
+                    }
                 }) {
                     HStack {
                         if languageCode == language {

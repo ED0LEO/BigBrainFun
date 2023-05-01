@@ -25,7 +25,6 @@ class LanguageManager {
         NotificationCenter.default.post(name: Notification.Name("LanguageChanged"), object: nil)
         Bundle.swizzleBundle(bundle)
     }
-    
 }
 
 extension Bundle {
