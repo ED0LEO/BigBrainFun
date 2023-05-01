@@ -14,6 +14,7 @@ struct LanguagePickerView: View {
                 Button(action: {
                     languageCode = language
                     LanguageManager.shared.setLanguage(languageCode)
+                    UserDefaults.standard.set(languageCode, forKey: "selectedLanguageCode")
                 }) {
                     HStack {
                         if languageCode == language {
@@ -37,6 +38,12 @@ struct LanguagePickerView: View {
             }
         }
         .padding(.bottom, 20)
+        .onAppear {
+            if let selectedLanguageCode = UserDefaults.standard.string(forKey: "selectedLanguageCode") {
+                languageCode = selectedLanguageCode
+                LanguageManager.shared.setLanguage(languageCode)
+            }
+        }
     }
 }
 
