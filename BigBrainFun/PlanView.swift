@@ -92,6 +92,7 @@ struct Quest: Identifiable, Equatable {
     var isCompleted = false
     var documentURL: URL? = nil
     var category: Category
+    var completionDate: Date? = nil
 }
 
 struct PlanView_Previews: PreviewProvider {

@@ -242,7 +242,7 @@ struct QuestsView: View {
     }
     
     private func markQuestCompleted(quest: Quest) {
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!)
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!, dateCompleted: quest.completionDate ?? Date())
     }
     
     private func addQuest(title: String, category: Category) {
