@@ -18,3 +18,13 @@
 "Fun" = "Amusant";
 "Show Calendar" = "Afficher le Calendrier";
 "Hide Calendar" = "Masquer le Calendrier";
+
+"Analyze File" = "Analyser le fichier";
+"Choose File" = "Choisir un fichier";
+"Select a file to analyze:" = "Sélectionnez un fichier à analyser:";
+"Analyze File for Quest:" = "Analyser le fichier pour la quête :";
+
+"No text detected" = "Aucun texte détecté";
+"Text detected:" = "Texte détecté :";
+"Object detected." = "Objet détecté.";
+"Object is not detected." = "L'objet n'est pas détecté.";

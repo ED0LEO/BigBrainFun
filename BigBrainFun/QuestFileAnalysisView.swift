@@ -277,10 +277,16 @@ struct QuestFileAnalysisView: View {
         ZStack {
             VStack {
                 HStack {
-                    Text("Analyze File for Quest: \(quest.title)")
+                    Text("Analyze File for Quest:")
                         .font(.title)
                         .padding()
                         .foregroundColor(.black)
+
+                    Text("\(quest.title)")
+                        .font(.title)
+                        .padding()
+                        .foregroundColor(.black)
+
                     
                     Spacer()
                     
