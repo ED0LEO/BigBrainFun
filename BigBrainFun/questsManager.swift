@@ -148,7 +148,7 @@ class QuestsManager: ObservableObject {
     func updateQuest(id: String, title: String, category: Category, isCompleted: Bool, documentURL: URL, dateCompleted: Date) {
         let dateFormatter = ISO8601DateFormatter()
         let dateString = dateFormatter.string(from: dateCompleted)
-        let updateStatementString = "UPDATE Quest SET title = '\(title)', isCompleted = \(isCompleted ? 1 : 0), category = '\(category.rawValue)', documentURL = '\(documentURL.absoluteString)', dateCompleted = '\(dateString)' WHERE id = '\(id)';"
+        let updateStatementString = "UPDATE Quest SET title = '\(title)', isCompleted = \(isCompleted ? 1 : 0), category = '\(category.rawValue)', documentURL = '\(documentURL.absoluteString)', completionDate = '\(dateString)' WHERE id = '\(id)';"
         
         var updateStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
