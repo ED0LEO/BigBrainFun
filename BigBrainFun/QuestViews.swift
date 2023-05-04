@@ -248,9 +248,12 @@ struct QuestsView: View {
     private func addQuest(title: String, category: Category) {
         if !title.isEmpty {
             let q = Quest(id: UUID().uuidString, title: title, category: category)
-            questsManager.insertQuest(quest: q)
-            print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
-            createNotification = true
+            if questsManager.insertQuest(quest: q) != 0 {
+                print("addQuest: tit = " + q.title + ", cat = " + q.category.rawValue + ", id = " + q.id)
+                createNotification = true
+            } else {
+                print("addQuest: failed to insert quest")
+            }
         }
         newQuest = ""
     }

@@ -107,13 +107,15 @@ class QuestsManager: ObservableObject {
         sqlite3_finalize(queryStatement)
     }
     
-    func insertQuest(quest: Quest) {
+    func insertQuest(quest: Quest) -> Int {
         let insertStatementString = "INSERT INTO Quest (id, title, isCompleted, documentURL, category, completionDate) VALUES ('\(quest.id)', '\(quest.title)', \(quest.isCompleted ? 1 : 0), '\(quest.documentURL?.absoluteString ?? "")', '\(quest.category.rawValue)', \(quest.completionDate?.timeIntervalSince1970 ?? 0));"
         
-        var insertStatement: OpaquePointer?
+        var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(database, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("Successfully inserted row.")
+                sqlite3_finalize(insertStatement)
+                return 1
             } else {
                 let errmsg = String(cString: sqlite3_errmsg(database))
                 print("Could not insert row. Error message: \(errmsg)")
@@ -122,9 +124,12 @@ class QuestsManager: ObservableObject {
             print("INSERT statement could not be prepared.")
         }
         
-        sqlite3_finalize(insertStatement)
+        if insertStatement != nil {
+            sqlite3_finalize(insertStatement)
+        }
+        return 0
     }
-    
+
     func deleteQuest(quest: Quest) {
         let deleteStatementString = "DELETE FROM Quest WHERE id = '\(quest.id)';"
         var deleteStatement: OpaquePointer?
