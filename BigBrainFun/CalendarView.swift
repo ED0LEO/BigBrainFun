@@ -58,23 +58,21 @@ struct MonthView: View {
         let startOfMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: month))!
         let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: startOfMonth))!
         let endOfMonth = Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
-        
-        var totalWeeks = Calendar.current.dateComponents([.weekOfMonth], from: startOfMonth, to: endOfMonth).weekOfMonth ?? 0
-        
-        // Check if the last day of the month is in the last week of the month
-        let lastDayInMonth = Calendar.current.component(.day, from: endOfMonth)
-        let lastWeekDays = (7 - Calendar.current.component(.weekday, from: endOfMonth) + 1)
-        if lastDayInMonth + lastWeekDays > 7 * totalWeeks {
-            totalWeeks += 1
-        }
-        
+
+        let firstDayOfWeek = Calendar.current.date(byAdding: .day, value: -1 * (Calendar.current.component(.weekday, from: startOfMonth) - 1), to: startOfMonth)!
+        let lastDayOfWeek = Calendar.current.date(byAdding: .day, value: (7 - Calendar.current.component(.weekday, from: endOfMonth)), to: endOfMonth)!
+
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDayOfWeek, to: lastDayOfWeek).day! + 1
+        let totalWeeks = totalDays / 7 + (totalDays % 7 > 0 ? 1 : 0)
+
         return (0..<totalWeeks).map { week in
             (0..<7).map { day -> Date in
-                let date = Calendar.current.date(byAdding: .day, value: (week * 7) + day, to: startOfWeek)!
+                let date = Calendar.current.date(byAdding: .day, value: (week * 7) + day, to: firstDayOfWeek)!
                 return date
             }
         }
     }
+
 }
 
 struct DayView: View {
