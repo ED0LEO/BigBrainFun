@@ -72,21 +72,35 @@ struct MonthView: View {
             }
         }
     }
-
 }
 
 struct DayView: View {
     let day: Date
     @Binding var selectedDate: Date
     @Binding var currentMonth: Date
+    @EnvironmentObject var questsManager: QuestsManager
     
     var body: some View {
+        var numberOfCompletedQuests = getNumberOfCompletedQuests(on: day)
+        
         Button(action: {
             selectedDate = day
+            numberOfCompletedQuests = getNumberOfCompletedQuests(on: day)
         }) {
-            Text("\(Calendar.current.component(.day, from: day))")
-                .font(.headline)
-                .foregroundColor(isSelected ? .white : isInCurrentMonth ? .primary : .secondary)
+            VStack {
+                Text("\(Calendar.current.component(.day, from: day))")
+                    .font(.headline)
+                    .foregroundColor(isSelected ? .white : isInCurrentMonth ? .primary : .secondary)
+                
+                if numberOfCompletedQuests > 0 {
+                    Text("\(numberOfCompletedQuests) Quest\(numberOfCompletedQuests == 1 ? "" : "s") Completed")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                else {
+                    Text("N: \(numberOfCompletedQuests)")
+                }
+            }
         }
         .buttonStyle(PlainButtonStyle())
         .frame(maxWidth: .infinity)
@@ -100,6 +114,25 @@ struct DayView: View {
     private var isSelected: Bool {
         Calendar.current.isDate(day, equalTo: selectedDate, toGranularity: .day)
     }
+    
+    private func getNumberOfCompletedQuests(on date: Date) -> Int {
+        let allQuests = questsManager.getAllQuests()
+        print("All quests: \(allQuests)")
+        
+        let completedQuests = allQuests.filter { quest in
+            if let completionDate = quest.completionDate {
+                let isSameDay = Calendar.current.isDate(completionDate, equalTo: date, toGranularity: .day)
+                print("Completion date: \(completionDate), is same day: \(isSameDay)")
+                return isSameDay
+            } else {
+                return false
+            }
+        }
+        print("Completed quests: \(completedQuests)")
+        
+        return completedQuests.count
+    }
+
 }
 
 struct WeekdayHeaderView: View {

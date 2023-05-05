@@ -154,6 +154,7 @@ class QuestsManager: ObservableObject {
         if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
             if sqlite3_step(updateStatement) == SQLITE_DONE {
                 print("Successfully updated row with id: '\(id)'.")
+                print("FROMUPDATEid: \(id), title: \(title), isCompleted: \(isCompleted), documentURL: \(documentURL.absoluteString)), category: \(category.rawValue), completionDate: \(dateString)")
             } else {
                 print("Could not update row.")
             }
@@ -221,6 +222,8 @@ class QuestsManager: ObservableObject {
                  
                  */
                 
+                print("FROMGETALLid: \(String(cString: id)), title: \(String(cString: title)), isCompleted: \(isCompleted), documentURL: \(String(describing: documentURL)), category: \(Category(rawValue: String(cString: category)) ?? .study), completionDate: \(String(describing: completionDate))")
+
                 let quest = Quest(id: String(cString: id),
                                   title: String(cString: title),
                                   isCompleted: isCompleted,
