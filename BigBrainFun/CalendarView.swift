@@ -85,7 +85,6 @@ struct DayView: View {
         
         Button(action: {
             selectedDate = day
-            numberOfCompletedQuests = getNumberOfCompletedQuests(on: day)
         }) {
             VStack {
                 Text("\(Calendar.current.component(.day, from: day))")
@@ -132,7 +131,6 @@ struct DayView: View {
         
         return completedQuests.count
     }
-
 }
 
 struct WeekdayHeaderView: View {

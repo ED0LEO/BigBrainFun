@@ -171,10 +171,9 @@ struct QuestFileAnalysisView: View {
     }
     
     private func toggleCompletion() {
-        let date = Date()
-        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!, dateCompleted: date)
+        questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: !quest.isCompleted, documentURL: quest.documentURL!, dateCompleted: Date())
         quest.isCompleted.toggle() // update the local quest state variable as well
-        quest.completionDate = date
+        quest.completionDate = Date()
         points.points = points.points + 100
     }
     

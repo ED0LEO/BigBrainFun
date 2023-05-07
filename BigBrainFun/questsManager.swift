@@ -46,7 +46,7 @@ class QuestsManager: ObservableObject {
             isCompleted INTEGER NOT NULL DEFAULT 0,
             documentURL TEXT,
             category TEXT NOT NULL,
-            completionDate INTEGER
+            completionDate DATE
         );
         """
         
@@ -148,6 +148,12 @@ class QuestsManager: ObservableObject {
     func updateQuest(id: String, title: String, category: Category, isCompleted: Bool, documentURL: URL, dateCompleted: Date) {
         let dateFormatter = ISO8601DateFormatter()
         let dateString = dateFormatter.string(from: dateCompleted)
+        
+        if dateFormatter.date(from: dateString) == nil {
+            print("Invalid date format: \(dateString)")
+            return
+        }
+        
         let updateStatementString = "UPDATE Quest SET title = '\(title)', isCompleted = \(isCompleted ? 1 : 0), category = '\(category.rawValue)', documentURL = '\(documentURL.absoluteString)', completionDate = '\(dateString)' WHERE id = '\(id)';"
         
         var updateStatement: OpaquePointer?
@@ -163,7 +169,7 @@ class QuestsManager: ObservableObject {
         }
         sqlite3_finalize(updateStatement)
     }
-    
+
     func deleteDatabase() {
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -208,12 +214,15 @@ class QuestsManager: ObservableObject {
                 let documentURLString = String(cString: documentURLValue)
                 let documentURL = !documentURLString.isEmpty ? URL(string: documentURLString) : nil
                 
-                let completionDate: Date?
-                if let completionDateValue = sqlite3_column_int64(queryStatement, 5) as? TimeInterval {
-                    completionDate = Date(timeIntervalSince1970: completionDateValue)
-                } else {
-                    completionDate = nil
-                }
+//                let completionDate: Date?
+//                if let completionDateValue = sqlite3_column_int64(queryStatement, 5) as? TimeInterval {
+//                    completionDate = Date(timeIntervalSince1970: completionDateValue)
+//                } else {
+//                    completionDate = nil
+//                }
+                
+                let completionDateValue = sqlite3_column_int64(queryStatement, 5)
+                let completionDate = completionDateValue > 0 ? Date(timeIntervalSince1970: TimeInterval(completionDateValue)) : nil
                 
                 /*
                  try later
