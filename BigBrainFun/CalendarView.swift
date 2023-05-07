@@ -121,7 +121,7 @@ struct DayView: View {
         let completedQuests = allQuests.filter { quest in
             if let completionDate = quest.completionDate {
                 let isSameDay = Calendar.current.isDate(completionDate, equalTo: date, toGranularity: .day)
-                print("Completion date: \(completionDate), is same day: \(isSameDay)")
+                print("Completion date: \(completionDate), is same day: \(isSameDay) as \(date).")
                 return isSameDay
             } else {
                 return false

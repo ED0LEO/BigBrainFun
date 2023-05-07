@@ -146,15 +146,20 @@ class QuestsManager: ObservableObject {
     }
     
     func updateQuest(id: String, title: String, category: Category, isCompleted: Bool, documentURL: URL, dateCompleted: Date) {
-        let dateFormatter = ISO8601DateFormatter()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         let dateString = dateFormatter.string(from: dateCompleted)
         
-        if dateFormatter.date(from: dateString) == nil {
-            print("Invalid date format: \(dateString)")
-            return
-        }
-        
-        let updateStatementString = "UPDATE Quest SET title = '\(title)', isCompleted = \(isCompleted ? 1 : 0), category = '\(category.rawValue)', documentURL = '\(documentURL.absoluteString)', completionDate = '\(dateString)' WHERE id = '\(id)';"
+        let updateStatementString = """
+            UPDATE Quest SET
+                title = '\(title)',
+                isCompleted = \(isCompleted ? 1 : 0),
+                category = '\(category.rawValue)',
+                documentURL = '\(documentURL.absoluteString)',
+                completionDate = strftime('%s', '\(dateString)')
+            WHERE id = '\(id)';
+            """
         
         var updateStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, updateStatementString, -1, &updateStatement, nil) == SQLITE_OK {
@@ -169,6 +174,7 @@ class QuestsManager: ObservableObject {
         }
         sqlite3_finalize(updateStatement)
     }
+
 
     func deleteDatabase() {
         let fileManager = FileManager.default
