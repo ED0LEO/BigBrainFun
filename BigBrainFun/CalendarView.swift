@@ -92,12 +92,21 @@ struct DayView: View {
                     .foregroundColor(isSelected ? .white : isInCurrentMonth ? .primary : .secondary)
                 
                 if numberOfCompletedQuests > 0 {
-                    Text("\(numberOfCompletedQuests) Quest\(numberOfCompletedQuests == 1 ? "" : "s") Completed")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                else {
-                    Text("N: \(numberOfCompletedQuests)")
+                    HStack(spacing: 3) {
+                        ForEach(0..<min(numberOfCompletedQuests, 3)) { _ in
+                            Image(systemName: "circle.fill")
+                                .foregroundColor(.green)
+                                .font(.system(size: 7))
+                        }
+                        if numberOfCompletedQuests > 3 {
+                            Text("+\(numberOfCompletedQuests - 3)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                } else {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.red)
                 }
             }
         }
