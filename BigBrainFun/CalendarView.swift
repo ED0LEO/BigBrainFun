@@ -80,11 +80,14 @@ struct DayView: View {
     @Binding var currentMonth: Date
     @EnvironmentObject var questsManager: QuestsManager
     
+    @State private var showQuests = false
+    
     var body: some View {
-        var numberOfCompletedQuests = getNumberOfCompletedQuests(on: day)
+        let numberOfCompletedQuests = getNumberOfCompletedQuests(on: day)
         
         Button(action: {
             selectedDate = day
+            showQuests = true
         }) {
             VStack {
                 Text("\(Calendar.current.component(.day, from: day))")
@@ -113,6 +116,10 @@ struct DayView: View {
         .buttonStyle(PlainButtonStyle())
         .frame(maxWidth: .infinity)
         .background(isSelected ? Color.accentColor : Color.clear)
+        .sheet(isPresented: $showQuests) {
+            QuestsListView(day: day)
+                .environmentObject(questsManager)
+        }
     }
     
     private var isInCurrentMonth: Bool {
@@ -125,20 +132,41 @@ struct DayView: View {
     
     private func getNumberOfCompletedQuests(on date: Date) -> Int {
         let allQuests = questsManager.getAllQuests()
-        print("All quests: \(allQuests)")
-        
         let completedQuests = allQuests.filter { quest in
             if let completionDate = quest.completionDate {
-                let isSameDay = Calendar.current.isDate(completionDate, equalTo: date, toGranularity: .day)
-                print("Completion date: \(completionDate), is same day: \(isSameDay) as \(date).")
-                return isSameDay
+                return Calendar.current.isDate(completionDate, equalTo: date, toGranularity: .day)
             } else {
                 return false
             }
         }
-        print("Completed quests: \(completedQuests)")
-        
         return completedQuests.count
+    }
+}
+
+struct QuestsListView: View {
+    let day: Date
+    @EnvironmentObject var questsManager: QuestsManager
+    
+    var body: some View {
+        let dateFormatter = DateFormatter()
+
+        let completedQuests = getCompletedQuests(on: day)
+        List(completedQuests) { quest in
+            Text(quest.title)
+        }
+        .navigationTitle(dateFormatter.string(from: day))
+    }
+    
+    private func getCompletedQuests(on date: Date) -> [Quest] {
+        let allQuests = questsManager.getAllQuests()
+        let completedQuests = allQuests.filter { quest in
+            if let completionDate = quest.completionDate {
+                return Calendar.current.isDate(completionDate, equalTo: date, toGranularity: .day)
+            } else {
+                return false
+            }
+        }
+        return completedQuests
     }
 }
 

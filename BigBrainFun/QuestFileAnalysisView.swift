@@ -22,44 +22,44 @@ struct QuestFileAnalysisView: View {
     let onClose: () -> Void
     typealias WordSet = Set<String>
     typealias LabelSet = Set<String>
-
+    
     func isImageMatchingTitle(title: String, image: CGImage) -> Bool {
         guard let model = try? EfficientDet(configuration: MLModelConfiguration()),
               let visionModel = try? VNCoreMLModel(for: model.model) else {
             print("Failed to load EfficientDet model.")
             return false
         }
-
+        
         let handler = VNImageRequestHandler(cgImage: image)
-
+        
         var matched = false
-
+        
         let request = VNCoreMLRequest(model: visionModel) { request, error in
             guard let observations = request.results as? [VNRecognizedObjectObservation] else {
                 print("Failed to get object detection results.")
                 return
             }
-
+            
             let titleWords: WordSet = Set(title.lowercased().components(separatedBy: " "))
-
+            
             let relevantObservations = observations.filter { observation in
                 guard let label = observation.labels.first else {
                     return false
                 }
-
+                
                 let relatedWords: WordSet = Set(getRelatedWords(for: titleWords))
                 let labelWords: WordSet = Set(label.identifier.lowercased().components(separatedBy: " "))
                 let commonWords = relatedWords.intersection(labelWords)
                 let commonWordsRatio = Float(commonWords.count) / Float(labelWords.count)
-
+                
                 // Filter out low-confidence predictions and predictions that are too small or too large
                 let sizeThreshold: CGFloat = 0.05
-
+                
                 print("labelWords: \(labelWords)")
-                            print("relatedWords: \(relatedWords)")
-                            print("commonWords: \(commonWords)")
-                            print("commonWordsRatio: \(commonWordsRatio)")
-                            print("observation.labels.first: \(observation.labels.first)")
+                print("relatedWords: \(relatedWords)")
+                print("commonWords: \(commonWords)")
+                print("commonWordsRatio: \(commonWordsRatio)")
+                print("observation.labels.first: \(observation.labels.first)")
                 
                 // Count it as a match if at least one word (its base) matched
                 let matched = relatedWords.contains { relatedWord in
@@ -67,47 +67,47 @@ struct QuestFileAnalysisView: View {
                         return relatedWord == getBaseWord(for: labelWord)
                     }
                 }
-
+                
                 return observation.confidence > 0.3 &&
-                    matched &&
-                    observation.boundingBox.width >= sizeThreshold &&
-                    observation.boundingBox.height >= sizeThreshold &&
-                    observation.boundingBox.width <= 1 - sizeThreshold &&
-                    observation.boundingBox.height <= 1 - sizeThreshold
+                matched &&
+                observation.boundingBox.width >= sizeThreshold &&
+                observation.boundingBox.height >= sizeThreshold &&
+                observation.boundingBox.width <= 1 - sizeThreshold &&
+                observation.boundingBox.height <= 1 - sizeThreshold
             }
-
+            
             if !relevantObservations.isEmpty {
                 matched = true
             }
         }
-
+        
         do {
             try handler.perform([request])
         } catch {
             print("Failed to perform image recognition.")
             return false
         }
-
+        
         return matched
     }
-
+    
     func getBaseWord(for word: String) -> String {
         let tagger = NSLinguisticTagger(tagSchemes: [.lemma], options: 0)
         tagger.string = word
-
+        
         var baseWord = word
         let range = NSRange(location: 0, length: word.utf16.count)
-
+        
         tagger.enumerateTags(in: range, unit: .word, scheme: .lemma) { tag, tokenRange, _ in
             if let lemma = tag?.rawValue {
                 baseWord = (word as NSString).substring(with: tokenRange)
                 baseWord = lemma
             }
         }
-
+        
         return baseWord
     }
-
+    
     func getRelatedWords(for words: WordSet) -> [String] {
         var relatedWords: [String] = []
         for word in words {
@@ -121,12 +121,12 @@ struct QuestFileAnalysisView: View {
         }
         return relatedWords
     }
-
+    
     func isJobDescription(title: String, text: String) -> Bool {
         let tagger = NLTagger(tagSchemes: [.lexicalClass])
         tagger.string = text
         let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation, .joinNames]
-
+        
         let jobTitle = title.lowercased()
         var jobWords: Set<String> = []
         jobTitle.enumerateSubstrings(in: jobTitle.startIndex..., options: .byWords) { word, _, _, _ in
@@ -134,37 +134,37 @@ struct QuestFileAnalysisView: View {
                 jobWords.insert(word)
             }
         }
-
+        
         var relatedWords: Set<String> = []
         let relatedWordsArray = getRelatedWords(for: jobWords)
         relatedWords.formUnion(relatedWordsArray)
-
+        
         var jobDescWords: Set<String> = []
         tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange in
             guard let tag = tag, let token = text[tokenRange].lowercased().trimmingCharacters(in: .whitespacesAndNewlines) as String?, !jobWords.contains(token) else {
                 return true
             }
-
+            
             if tag == .noun || tag == .verb || tag == .adjective || tag == .adverb {
                 jobDescWords.insert(token)
             } else if relatedWords.contains(token) {
                 jobDescWords.insert(token)
             }
-
+            
             return true
         }
-
+        
         let commonWords = jobWords.intersection(jobDescWords)
-
+        
         print("TXTJob Title: \(jobTitle)")
         print("TXTJob Words: \(jobWords)")
         print("TXTrelated Words: \(relatedWords)")
         print("TXTJob Desc Words: \(jobDescWords)")
         print("TXTCommon Words: \(commonWords)")
-
+        
         return commonWords.count >= jobWords.count / 4
     }
-
+    
     private func updateQuestDocumentURL(newURL: URL) {
         quest.documentURL = newURL
         questsManager.updateQuest(id: quest.id, title: quest.title, category: quest.category, isCompleted: quest.isCompleted, documentURL: newURL, dateCompleted: quest.completionDate!)
@@ -282,12 +282,12 @@ struct QuestFileAnalysisView: View {
                         .font(.title)
                         .padding()
                         .foregroundColor(.black)
-
+                    
                     Text("\(quest.title)")
                         .font(.title)
                         .padding()
                         .foregroundColor(.black)
-
+                    
                     
                     Spacer()
                     
