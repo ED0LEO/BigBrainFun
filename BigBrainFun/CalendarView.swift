@@ -153,15 +153,16 @@ struct QuestsListView: View {
         VStack {
             HStack {
                 Spacer()
+                
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.red)
-                        .padding(.trailing, 16)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
                 }
+                .buttonStyle(CloseButton())
+                .padding(.trailing, 16)
             }
             .padding(.top, 16)
             .padding(.bottom, 8)
