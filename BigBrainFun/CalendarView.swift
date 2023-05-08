@@ -146,15 +146,51 @@ struct DayView: View {
 struct QuestsListView: View {
     let day: Date
     @EnvironmentObject var questsManager: QuestsManager
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        let dateFormatter = DateFormatter()
-
         let completedQuests = getCompletedQuests(on: day)
-        List(completedQuests) { quest in
-            Text(quest.title)
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.red)
+                        .padding(.trailing, 16)
+                }
+            }
+            .padding(.top, 16)
+            .padding(.bottom, 8)
+            
+            if completedQuests.isEmpty {
+                Text("No completed quests on this day.")
+                    .foregroundColor(.secondary)
+                    .padding()
+            } else {
+                List(completedQuests) { quest in
+                    HStack {
+                        Image(systemName: quest.isCompleted ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(quest.isCompleted ? .green : .secondary)
+                            .font(.system(size: 24))
+                            .frame(width: 32, height: 32)
+                            .padding(.trailing, 8)
+                        Text(quest.title)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Text("+ 100 points")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                }
+                .listStyle(SidebarListStyle())
+            }
+            Spacer()
         }
-        .navigationTitle(dateFormatter.string(from: day))
+        .ignoresSafeArea(.all)
     }
     
     private func getCompletedQuests(on date: Date) -> [Quest] {
