@@ -119,6 +119,7 @@ struct DayView: View {
         .sheet(isPresented: $showQuests) {
             QuestsListView(day: day)
                 .environmentObject(questsManager)
+                .frame(minWidth: 300, minHeight: 400)
         }
     }
     
