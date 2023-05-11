@@ -171,10 +171,10 @@
 				0CE8E0FA29D8F8D300983BC7 /* RulesView.swift */,
 				0CE8E0FC29D90CC200983BC7 /* PlanView.swift */,
 				0C6FA66229E0B3B700F5418E /* CalendarView.swift */,
+				0CC17D3929E73C5E00F10C36 /* BrowserView.swift */,
 				0CE0BBE029D89BB000632086 /* Assets.xcassets */,
 				0CE0BBE529D89BB000632086 /* BigBrainFun.entitlements */,
 				0CE0BBE229D89BB000632086 /* Preview Content */,
-				0CC17D3929E73C5E00F10C36 /* BrowserView.swift */,
 			);
 			path = BigBrainFun;
 			sourceTree = "<group>";

@@ -8,13 +8,40 @@
 import SwiftUI
 
 struct PrizesView: View {
+    @EnvironmentObject var questsManager: QuestsManager
+
     var body: some View {
         VStack {
-            Text("Congratulations! You completed quests for 5 days in a row and received +100 points!")
-                .font(.title)
-                .multilineTextAlignment(.center)
-            // Add more prize information and styling here
+            Divider()
+            
+            HStack {
+                Text("Category")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
+                Text("Completed")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            
+            ForEach(Category.allCases, id: \.self) { category in
+                HStack {
+                    Text(category.rawValue)
+                        .frame(maxWidth: .infinity)
+                    Text("\(completedQuestsCount(category: category))")
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
         }
+    }
+    
+    private func completedQuestsCount(category: Category) -> Int {
+        let allQuests = questsManager.getAllQuests()
+        let completedQuests = allQuests.filter { quest in
+            quest.category == category && quest.isCompleted
+        }
+        return completedQuests.count
     }
 }
 
