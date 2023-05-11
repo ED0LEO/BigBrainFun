@@ -13,6 +13,7 @@
 		0C24913C29E9FC0A00E17C38 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C24913B29E9FC0A00E17C38 /* ButtonStyles.swift */; };
 		0C4BAB9E29DCA50D001DAE6C /* SpinningBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */; };
 		0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */; };
+		0C503DE52A0D8A7A00D7C445 /* PrizesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C503DE42A0D8A7A00D7C445 /* PrizesView.swift */; };
 		0C57166529E1F1A0006BB033 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */; };
 		0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6FA66229E0B3B700F5418E /* CalendarView.swift */; };
 		0C70DA3629F1F6D600C52DF1 /* button-pressed-38129.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0C70DA3529F1F6D600C52DF1 /* button-pressed-38129.mp3 */; };
@@ -60,6 +61,7 @@
 		0C24913B29E9FC0A00E17C38 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		0C4BAB9D29DCA50D001DAE6C /* SpinningBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningBackgroundView.swift; sourceTree = "<group>"; };
 		0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsManager.swift; sourceTree = "<group>"; };
+		0C503DE42A0D8A7A00D7C445 /* PrizesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrizesView.swift; sourceTree = "<group>"; };
 		0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		0C6FA66229E0B3B700F5418E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		0C70DA3529F1F6D600C52DF1 /* button-pressed-38129.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-pressed-38129.mp3"; path = "../../../Downloads/button-pressed-38129.mp3"; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				0C4BAB9F29DE086B001DAE6C /* QuestsManager.swift */,
 				0CE0BBDC29D89BAF00632086 /* BigBrainFunApp.swift */,
 				0CE0BBDE29D89BAF00632086 /* ContentView.swift */,
+				0C503DE42A0D8A7A00D7C445 /* PrizesView.swift */,
 				0C24913B29E9FC0A00E17C38 /* ButtonStyles.swift */,
 				0C57166429E1F1A0006BB033 /* VideoPlayerView.swift */,
 				0CE0D04329D9DC8E00ABA468 /* DashView.swift */,
@@ -343,6 +346,7 @@
 				0C6FA66329E0B3B700F5418E /* CalendarView.swift in Sources */,
 				0C1A0C5029F879F900FB7958 /* EfficientDet.mlmodel in Sources */,
 				0CE0BBDF29D89BAF00632086 /* ContentView.swift in Sources */,
+				0C503DE52A0D8A7A00D7C445 /* PrizesView.swift in Sources */,
 				0CDD671A29EDE7B000A793A6 /* NotificationViews.swift in Sources */,
 				0C24913C29E9FC0A00E17C38 /* ButtonStyles.swift in Sources */,
 				0C4BABA029DE086B001DAE6C /* QuestsManager.swift in Sources */,

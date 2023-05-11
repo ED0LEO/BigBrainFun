@@ -112,6 +112,12 @@ struct ContentView: View {
                             .tabItem {
                                 Label("Browser", systemImage: "triangle.fill")
                             }
+                        
+                        PrizesView()
+                            .tag(5)
+                            .tabItem {
+                                Label("Prizes", systemImage: "gift.fill")
+                            }
                     }
                     .frame(width: geometry.size.width * 0.99, height: geometry.size.height * 0.9)
                     
@@ -132,6 +138,14 @@ struct ContentView: View {
                             .padding(5)
                             .popover(isPresented: $isLanguagePickerShowing) {
                                 LanguagePickerView(languageCode: $selectedLanguageCode)
+                            }
+                            
+                            if selection != 5 {
+                                Button(action: { selection = 5 }) {
+                                    Image(systemName: "gift.fill")
+                                }
+                                .buttonStyle(SideButtonStyle())
+                                .padding(5)
                             }
                         }
                     }
