@@ -15,6 +15,8 @@ struct PrizesView: View {
     @State private var consecutiveDaysChallengeCompleted = false
     @State private var questsCompletedChallengeCompleted = false
     
+    @State var completedChallengeDates: [Date] = []
+
     var body: some View {
         VStack {
             Divider()
@@ -91,11 +93,16 @@ struct PrizesView: View {
         let allQuests = questsManager.getAllQuests()
         let completedQuests = allQuests.filter { $0.isCompleted }
         let sortedQuests = completedQuests.sorted(by: { $0.completionDate! < $1.completionDate! })
-        
+
         // Check for completed quests on current day
         let todayCompleted = completedQuests.contains(where: { Calendar.current.isDateInToday($0.completionDate!) })
-        todayChallengeCompleted = todayCompleted
-        
+        if todayCompleted && !completedChallengeDates.contains(Date()) {
+            completedChallengeDates.append(Date())
+            todayChallengeCompleted = true
+        } else {
+            todayChallengeCompleted = false
+        }
+
         // Check for completed quests on 5 consecutive days
         var daysCompleted = 0
         var previousCompletionDate: Date?
@@ -110,18 +117,25 @@ struct PrizesView: View {
                 }
             }
             previousCompletionDate = quest.completionDate
-            
-            if daysCompleted >= 4 {
+
+            if daysCompleted >= 4 && !completedChallengeDates.contains(quest.completionDate!) {
+                completedChallengeDates.append(quest.completionDate!)
                 consecutiveDaysChallengeCompleted = true
                 break // Prize already available, no need to check other challenges
             }
         }
-        
+
         // Check for completion of 20 quests
-        questsCompletedChallengeCompleted = completedQuests.count >= 20
-        
+        if completedQuests.count >= 20 && !completedChallengeDates.contains(Date()) {
+            completedChallengeDates.append(Date())
+            questsCompletedChallengeCompleted = true
+        } else {
+            questsCompletedChallengeCompleted = false
+        }
+
         // Check if prize button should be visible
-        prizeButtonVisible = todayCompleted || consecutiveDaysChallengeCompleted || questsCompletedChallengeCompleted
+        let rewardAlreadyCollected = completedChallengeDates.contains(where: { Calendar.current.isDateInToday($0) })
+        prizeButtonVisible = !rewardAlreadyCollected && (todayChallengeCompleted || consecutiveDaysChallengeCompleted || questsCompletedChallengeCompleted)
     }
 
 }

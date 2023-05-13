@@ -12,7 +12,7 @@ struct VideoPlayerView: View {
     let videoID: String
 
     var body: some View {
-        WebView(url: URL(string: "https://inv.odyssey346.dev/embed/\(videoID)")!)
+        WebView(url: URL(string: "https://yewtu.be/embed/\(videoID)")!)
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
