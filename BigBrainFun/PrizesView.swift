@@ -92,6 +92,10 @@ struct PrizesView: View {
         let completedQuests = allQuests.filter { $0.isCompleted }
         let sortedQuests = completedQuests.sorted(by: { $0.completionDate! < $1.completionDate! })
         
+        // Check for completed quests on current day
+        let todayCompleted = completedQuests.contains(where: { Calendar.current.isDateInToday($0.completionDate!) })
+        todayChallengeCompleted = todayCompleted
+        
         // Check for completed quests on 5 consecutive days
         var daysCompleted = 0
         var previousCompletionDate: Date?
@@ -108,15 +112,16 @@ struct PrizesView: View {
             previousCompletionDate = quest.completionDate
             
             if daysCompleted >= 4 {
-                prizeButtonVisible = true
-                return // Prize already available, no need to check other challenges
+                consecutiveDaysChallengeCompleted = true
+                break // Prize already available, no need to check other challenges
             }
         }
         
         // Check for completion of 20 quests
-        if completedQuests.count >= 20 {
-            prizeButtonVisible = true
-        }
+        questsCompletedChallengeCompleted = completedQuests.count >= 20
+        
+        // Check if prize button should be visible
+        prizeButtonVisible = todayCompleted || consecutiveDaysChallengeCompleted || questsCompletedChallengeCompleted
     }
 
 }
