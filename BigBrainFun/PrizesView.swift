@@ -14,31 +14,54 @@ struct ChallengeView: View {
     var action: () -> Void
     
     var body: some View {
-        HStack {
-            if completed {
-                Text("✅")
-                    .foregroundColor(.green)
-            } else {
-                Text("❌")
-                    .foregroundColor(.red)
-            }
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(completed ? Color.green : Color.yellow)
+                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
+                        .foregroundColor(.white)
+                )
             
-            Text(title)
-                .foregroundColor(.primary)
-                .padding(.leading, 5)
-            
-            Spacer()
-            
-            if rewardAlreadyCollected {
-                Text("Reward claimed")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } else if completed {
-                Button("Claim") {
-                    action()
+            HStack {
+                Image(systemName: completed ? "checkmark.circle.fill" : "circle")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(.white)
+                
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .foregroundColor(.white)
+                        .font(.headline)
+                        .padding(.bottom, 5)
+                    if rewardAlreadyCollected {
+                        Text("Reward claimed")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                    } else if completed {
+                        Button(action: action) {
+                            Text("Claim Reward")
+                                .foregroundColor(.white)
+                                .font(.footnote)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                    } else {
+                        Text("In Progress")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                    }
                 }
+                
+                Spacer()
+                
             }
+            .padding(10)
         }
+        .frame(height: 100)
     }
 }
 
